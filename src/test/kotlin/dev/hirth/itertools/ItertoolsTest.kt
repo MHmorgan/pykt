@@ -68,14 +68,20 @@ class ItertoolsTest {
 
     @Test
     fun testAccumulateInt() {
-        val result = accumulate(listOf(1, 2, 3, 4)) { a, b -> a + b }.toList()
+        val result = accumulate(listOf<Int>(1, 2, 3, 4)).toList()
         assertEquals(listOf(1, 3, 6, 10), result)
     }
 
     @Test
     fun testAccumulateIntWithInitial() {
-        val result = accumulate(listOf(1, 2, 3), { a, b -> a + b }, 10).toList()
+        val result = accumulate(listOf<Int>(1, 2, 3), 10).toList()
         assertEquals(listOf(10, 11, 13, 16), result)
+    }
+
+    @Test
+    fun testAccumulateIntWithOperation() {
+        val result = accumulate(listOf<Int>(1, 2, 3, 4), { a, b -> a * b }).toList()
+        assertEquals(listOf(1, 2, 6, 24), result)
     }
 
     @Test
