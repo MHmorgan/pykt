@@ -11,7 +11,6 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.20"
 
     `java-library`
-    // application // Java CLI application
 }
 
 group = "org.example"
@@ -35,10 +34,6 @@ kotlin {
     jvmToolchain(17)
 }
 
-// application {
-//     mainClass.set("org.example.MainKt")
-// }
-
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
@@ -53,4 +48,3 @@ tasks.dokkaHtml {
         }
     }
 }
-
