@@ -5,7 +5,7 @@
  * 
  * Core utilities:
  * - [partial] - Partial function application
- * - [cache] and [lruCache] - Function memoization
+ * - [cache] and [lruCacheSync] - Function memoization
  * - [reduce] - Cumulative function application
  * - [cachedProperty] - Cached property delegates
  * - [wraps] - Function wrapper metadata preservation
