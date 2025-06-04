@@ -9,70 +9,74 @@ import java.io.Writer
 class CsvWriter(
     private val writer: Writer,
     private val dialect: CsvDialect = CsvDialect.EXCEL
-) {
-    
+): AutoCloseable {
+
     /**
      * Writes a single CSV row.
      */
     fun writeRow(row: List<Any?>) {
-        val fields = row.map { formatField(it?.toString() ?: "") }
+        val fields = row.map {
+            it?.toString()?.formatField() ?: ""
+        }
         writer.write(fields.joinToString(dialect.delimiter.toString()))
         writer.write(dialect.lineTerminator)
     }
-    
+
     /**
      * Writes multiple CSV rows.
      */
     fun writeRows(rows: Iterable<List<Any?>>) {
         rows.forEach { writeRow(it) }
     }
-    
+
     /**
      * Flushes the underlying writer.
      */
     fun flush() {
         writer.flush()
     }
-    
+
     /**
      * Closes the underlying writer.
      */
-    fun close() {
+    override fun close() {
         writer.close()
     }
-    
-    private fun formatField(field: String): String {
+
+    private fun String.formatField(): String {
         when (dialect.quoting) {
-            QuotingStyle.ALL -> return quoteField(field)
+            QuotingStyle.ALL -> return quoteField(this)
             QuotingStyle.NONE -> {
-                if (needsQuoting(field) && dialect.strict) {
-                    throw CsvError("Field contains special characters but quoting is disabled: '$field'")
+                if (needsQuoting(this) && dialect.strict) {
+                    throw CsvError("Field contains special characters but quoting is disabled: '$this'")
                 }
-                return escapeField(field)
+                return escapeField(this)
             }
+
             QuotingStyle.NON_NUMERIC -> {
-                if (!isNumeric(field)) {
-                    return quoteField(field)
+                if (!isNumeric(this)) {
+                    return quoteField(this)
                 }
-                return field
+                return this
             }
+
             QuotingStyle.MINIMAL -> {
-                if (needsQuoting(field)) {
-                    return quoteField(field)
+                if (needsQuoting(this)) {
+                    return quoteField(this)
                 }
-                return field
+                return this
             }
         }
     }
-    
+
     private fun needsQuoting(field: String): Boolean {
         return field.contains(dialect.delimiter) ||
-               field.contains(dialect.quoteChar) ||
-               field.contains('\r') ||
-               field.contains('\n') ||
-               (dialect.skipInitialSpace && field.startsWith(' '))
+                field.contains(dialect.quoteChar) ||
+                field.contains('\r') ||
+                field.contains('\n') ||
+                (dialect.skipInitialSpace && field.startsWith(' '))
     }
-    
+
     private fun isNumeric(field: String): Boolean {
         if (field.isEmpty()) return false
         return try {
@@ -82,47 +86,57 @@ class CsvWriter(
             false
         }
     }
-    
+
     private fun quoteField(field: String): String {
-        val escaped = if (dialect.doubleQuote) {
-            field.replace(dialect.quoteChar.toString(), "${dialect.quoteChar}${dialect.quoteChar}")
-        } else if (dialect.escapeChar != null) {
-            field.replace(dialect.quoteChar.toString(), "${dialect.escapeChar}${dialect.quoteChar}")
-        } else {
-            field
+        val ch = dialect.quoteChar.toString()
+        val escaped = when {
+            dialect.doubleQuote -> field.replace(ch, "$ch$ch")
+            dialect.escapeChar != null -> field.replace(ch, "${dialect.escapeChar}$ch")
+            else -> field
         }
-        return "${dialect.quoteChar}$escaped${dialect.quoteChar}"
+        return "$ch$escaped$ch"
     }
-    
+
     private fun escapeField(field: String): String {
-        if (dialect.escapeChar == null) {
-            return field
-        }
-        
+        if (dialect.escapeChar == null) return field
+
+        val esc = dialect.escapeChar.toString()
+        val del = dialect.delimiter.toString()
+
         return field
-            .replace(dialect.escapeChar.toString(), "${dialect.escapeChar}${dialect.escapeChar}")
-            .replace(dialect.delimiter.toString(), "${dialect.escapeChar}${dialect.delimiter}")
-            .replace("\r", "${dialect.escapeChar}\r")
-            .replace("\n", "${dialect.escapeChar}\n")
+            .replace(esc, "$esc$esc")
+            .replace(del, "$esc$del")
+            .replace("\r", "$esc\r")
+            .replace("\n", "$esc\n")
     }
 }
 
 /**
- * Creates a CSV writer that writes to a string and returns the result.
+ * Build a CSV string, using [CsvWriter].
  */
-fun csvWriter(dialect: CsvDialect = CsvDialect.EXCEL): Pair<CsvWriter, () -> String> {
-    val stringWriter = StringWriter()
-    val csvWriter = CsvWriter(stringWriter, dialect)
-    return csvWriter to { stringWriter.toString() }
+fun buildCsv(
+    dialect: CsvDialect = CsvDialect.EXCEL,
+    block: CsvWriter.() -> Unit = {}
+): String {
+    val wr = StringWriter()
+    CsvWriter(wr, dialect).use {
+        it.block()
+    }
+    return wr.toString()
 }
 
 /**
- * Creates a CSV writer that writes to the given Writer.
+ * Write CSV data to a writer, using [CsvWriter].
  */
-fun csvWriter(
+fun writeCsv(
     writer: Writer,
-    dialect: CsvDialect = CsvDialect.EXCEL
-): CsvWriter = CsvWriter(writer, dialect)
+    dialect: CsvDialect = CsvDialect.EXCEL,
+    block: CsvWriter.() -> Unit = {}
+) {
+    CsvWriter(writer, dialect).use {
+        it.block()
+    }
+}
 
 /**
  * Formats a list of rows as a CSV string.
@@ -131,7 +145,7 @@ fun formatCsv(
     rows: Iterable<List<Any?>>,
     dialect: CsvDialect = CsvDialect.EXCEL
 ): String {
-    val (writer, getString) = csvWriter(dialect)
-    writer.writeRows(rows)
-    return getString()
+    return buildCsv {
+        writeRows(rows)
+    }
 }

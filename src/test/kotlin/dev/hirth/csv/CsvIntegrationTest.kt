@@ -18,7 +18,7 @@ class CsvIntegrationTest {
         val fieldNames = listOf("name", "age", "city")
         
         // Write data to CSV string
-        val csvString = formatCsvDict(originalData, fieldNames)
+        val csvString = formatDictCsv(originalData, fieldNames)
         
         // Verify CSV format
         val expectedCsv = "name,age,city\r\nJohn Doe,30,New York\r\nJane Smith,25,Los Angeles\r\nBob Johnson,35,Chicago\r\n"
