@@ -1,16 +1,15 @@
-package dev.hirth.functools
+package dev.hirth
 
+import kotlinx.coroutines.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.ConcurrentHashMap
-import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.*
-import org.junit.jupiter.api.Nested
 
 class CacheTest {
 
@@ -26,16 +25,16 @@ class CacheTest {
 
             val cached = cache(expensiveFunction)
 
-            assertEquals(25, cached(5))
-            assertEquals(1, callCount)
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(1, callCount)
 
             // Second call should use cached value
-            assertEquals(25, cached(5))
-            assertEquals(1, callCount)
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(1, callCount)
 
             // Different argument should trigger new computation
-            assertEquals(36, cached(6))
-            assertEquals(2, callCount)
+            Assertions.assertEquals(36, cached(6))
+            Assertions.assertEquals(2, callCount)
         }
 
         @Test
@@ -43,12 +42,12 @@ class CacheTest {
             val cached = cache { x: Int -> x * x }
 
             val info = cached.cacheInfo()
-            assertEquals(0, info.currSize)
+            Assertions.assertEquals(0, info.currSize)
 
             cached(5)
             val info2 = cached.cacheInfo()
-            assertEquals(1, info2.currSize)
-            assertNull(info2.maxSize)
+            Assertions.assertEquals(1, info2.currSize)
+            Assertions.assertNull(info2.maxSize)
         }
 
         @Test
@@ -60,11 +59,11 @@ class CacheTest {
             }
 
             cached(5)
-            assertEquals(1, callCount)
+            Assertions.assertEquals(1, callCount)
 
             cached.clearCache()
             cached(5)
-            assertEquals(2, callCount) // Should recompute after clear
+            Assertions.assertEquals(2, callCount) // Should recompute after clear
         }
 
         @Test
@@ -75,18 +74,18 @@ class CacheTest {
                 x * x
             }
 
-            assertEquals(25, cached(5))
-            assertEquals(36, cached(6))
-            assertEquals(49, cached(7))
-            assertEquals(3, callCount)
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(36, cached(6))
+            Assertions.assertEquals(49, cached(7))
+            Assertions.assertEquals(3, callCount)
 
             // 5 should have been evicted (LRU)
-            assertEquals(25, cached(5))
-            assertEquals(4, callCount) // Should recompute
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(4, callCount) // Should recompute
 
             // 6 should have been evicted when 5 was added back
-            assertEquals(36, cached(6))
-            assertEquals(5, callCount) // Should recompute
+            Assertions.assertEquals(36, cached(6))
+            Assertions.assertEquals(5, callCount) // Should recompute
         }
 
         @Test
@@ -94,22 +93,22 @@ class CacheTest {
             val cached = lruCacheSync(maxSize = 2) { x: Int -> x * x }
 
             var info = cached.cacheInfo()
-            assertEquals(0, info.hits)
-            assertEquals(0, info.misses)
-            assertEquals(0, info.currSize)
-            assertEquals(2, info.maxSize)
+            Assertions.assertEquals(0, info.hits)
+            Assertions.assertEquals(0, info.misses)
+            Assertions.assertEquals(0, info.currSize)
+            Assertions.assertEquals(2, info.maxSize)
 
             cached(5)
             info = cached.cacheInfo()
-            assertEquals(0, info.hits)
-            assertEquals(1, info.misses)
-            assertEquals(1, info.currSize)
+            Assertions.assertEquals(0, info.hits)
+            Assertions.assertEquals(1, info.misses)
+            Assertions.assertEquals(1, info.currSize)
 
             cached(5) // Should be a hit
             info = cached.cacheInfo()
-            assertEquals(1, info.hits)
-            assertEquals(1, info.misses)
-            assertEquals(1, info.currSize)
+            Assertions.assertEquals(1, info.hits)
+            Assertions.assertEquals(1, info.misses)
+            Assertions.assertEquals(1, info.currSize)
         }
 
         @Test
@@ -120,18 +119,18 @@ class CacheTest {
                 x * x
             }
 
-            assertEquals(25, cached(5))
-            assertEquals(36, cached(6))
-            assertEquals(49, cached(7))
-            assertEquals(3, callCount)
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(36, cached(6))
+            Assertions.assertEquals(49, cached(7))
+            Assertions.assertEquals(3, callCount)
 
             // 5 should have been evicted (LRU)
-            assertEquals(25, cached(5))
-            assertEquals(4, callCount) // Should recompute
+            Assertions.assertEquals(25, cached(5))
+            Assertions.assertEquals(4, callCount) // Should recompute
 
             // 6 should have been evicted when 5 was added back
-            assertEquals(36, cached(6))
-            assertEquals(5, callCount) // Should recompute
+            Assertions.assertEquals(36, cached(6))
+            Assertions.assertEquals(5, callCount) // Should recompute
         }
 
         @Test
@@ -139,22 +138,22 @@ class CacheTest {
             val cached = lruCacheAsync(maxSize = 2) { x: Int -> x * x }
 
             var info = cached.cacheInfo()
-            assertEquals(0, info.hits)
-            assertEquals(0, info.misses)
-            assertEquals(0, info.currSize)
-            assertEquals(2, info.maxSize)
+            Assertions.assertEquals(0, info.hits)
+            Assertions.assertEquals(0, info.misses)
+            Assertions.assertEquals(0, info.currSize)
+            Assertions.assertEquals(2, info.maxSize)
 
             cached(5)
             info = cached.cacheInfo()
-            assertEquals(0, info.hits)
-            assertEquals(1, info.misses)
-            assertEquals(1, info.currSize)
+            Assertions.assertEquals(0, info.hits)
+            Assertions.assertEquals(1, info.misses)
+            Assertions.assertEquals(1, info.currSize)
 
             cached(5) // Should be a hit
             info = cached.cacheInfo()
-            assertEquals(1, info.hits)
-            assertEquals(1, info.misses)
-            assertEquals(1, info.currSize)
+            Assertions.assertEquals(1, info.hits)
+            Assertions.assertEquals(1, info.misses)
+            Assertions.assertEquals(1, info.currSize)
         }
     }
 
@@ -187,7 +186,7 @@ class CacheTest {
                     try {
                         latch.await() // wait for signal to start
                         val result = cached(5)
-                        assertEquals(25, result) // all should get correct result
+                        Assertions.assertEquals(25, result) // all should get correct result
                     } finally {
                         threadsCompleted.countDown()
                     }
@@ -195,11 +194,11 @@ class CacheTest {
             }
 
             latch.countDown() // release all threads at once
-            assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
+            Assertions.assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
             executor.shutdown()
 
             // The function should have been called exactly once due to @Synchronized
-            assertEquals(1, callCount.get())
+            Assertions.assertEquals(1, callCount.get())
         }
 
         @Test
@@ -224,7 +223,7 @@ class CacheTest {
                     try {
                         latch.await() // wait for signal to start
                         val result = cached(key)
-                        assertEquals(key * key, result) // all should get correct result
+                        Assertions.assertEquals(key * key, result) // all should get correct result
                     } finally {
                         threadsCompleted.countDown()
                     }
@@ -232,11 +231,11 @@ class CacheTest {
             }
 
             latch.countDown() // release all threads at once
-            assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
+            Assertions.assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
             executor.shutdown()
 
             // Each key should cause one computation
-            assertEquals(threadCount, callCount.get())
+            Assertions.assertEquals(threadCount, callCount.get())
         }
 
         @Test
@@ -263,8 +262,8 @@ class CacheTest {
                         latch.await() // wait for signal to start
                         val info = cached.cacheInfo()
                         // Just checking that we don't get exceptions or inconsistent state
-                        assertNotNull(info)
-                        assertTrue(info.currSize >= 0)
+                        Assertions.assertNotNull(info)
+                        Assertions.assertTrue(info.currSize >= 0)
                     } finally {
                         threadsCompleted.countDown()
                     }
@@ -272,7 +271,7 @@ class CacheTest {
             }
 
             latch.countDown() // release all threads at once
-            assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
+            Assertions.assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
             executor.shutdown()
         }
 
@@ -289,7 +288,7 @@ class CacheTest {
             for (i in 0 until 5) {
                 cached(i)
             }
-            assertEquals(5, callCount.get())
+            Assertions.assertEquals(5, callCount.get())
 
             val threadCount = 5
             val executor = Executors.newFixedThreadPool(threadCount * 2)
@@ -321,13 +320,13 @@ class CacheTest {
             }
 
             latch.countDown() // release all threads at once
-            assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
+            Assertions.assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
             executor.shutdown()
 
             // This check verifies that despite race conditions between clearing and accessing,
             // the @Synchronized annotation prevented any corruption
             val info = cached.cacheInfo()
-            assertTrue(info.hits >= 0 && info.misses >= 0 && info.currSize >= 0)
+            Assertions.assertTrue(info.hits >= 0 && info.misses >= 0 && info.currSize >= 0)
         }
 
         @Test
@@ -353,7 +352,7 @@ class CacheTest {
                     try {
                         latch.await()
                         val result = cached(key)
-                        assertEquals(key * key, result)
+                        Assertions.assertEquals(key * key, result)
                     } finally {
                         threadsCompleted.countDown()
                     }
@@ -361,17 +360,17 @@ class CacheTest {
             }
 
             latch.countDown()
-            assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
+            Assertions.assertTrue(threadsCompleted.await(5, TimeUnit.SECONDS))
             executor.shutdown()
 
             // Check that each key was calculated the correct number of times
             // This verifies that LRU eviction worked correctly even under concurrent access
             val info = cached.cacheInfo()
-            assertTrue(info.currSize <= 3) // Size should never exceed maxSize
+            Assertions.assertTrue(info.currSize <= 3) // Size should never exceed maxSize
 
             // Sum of all execution counts should match the total misses
             val totalExecutions = executionTracker.values.sumOf { it.get() }
-            assertEquals(info.misses, totalExecutions)
+            Assertions.assertEquals(info.misses, totalExecutions)
         }
     }
 
@@ -407,11 +406,11 @@ class CacheTest {
 
             // Check all results are correct
             results.forEach { deferred ->
-                assertEquals(25, deferred.await())
+                Assertions.assertEquals(25, deferred.await())
             }
 
             // The function should have been called exactly once due to mutex protection
-            assertEquals(1, callCount.get())
+            Assertions.assertEquals(1, callCount.get())
         }
 
         @Test
@@ -440,11 +439,11 @@ class CacheTest {
             // Check all results are correct
             results.forEach { deferred ->
                 val (key, result) = deferred.await()
-                assertEquals(key * key, result)
+                Assertions.assertEquals(key * key, result)
             }
 
             // Each key should cause one computation
-            assertEquals(coroutineCount, callCount.get())
+            Assertions.assertEquals(coroutineCount, callCount.get())
         }
 
         @Test
@@ -474,8 +473,8 @@ class CacheTest {
             // Check that we don't get exceptions or inconsistent state
             results.forEach { deferred ->
                 val info = deferred.await()
-                assertNotNull(info)
-                assertTrue(info.currSize >= 0)
+                Assertions.assertNotNull(info)
+                Assertions.assertTrue(info.currSize >= 0)
             }
         }
 
@@ -492,7 +491,7 @@ class CacheTest {
             for (i in 0 until 5) {
                 cached(i)
             }
-            assertEquals(5, callCount.get())
+            Assertions.assertEquals(5, callCount.get())
 
             val accessCount = 5
             val clearCount = 5
@@ -522,7 +521,7 @@ class CacheTest {
             // This check verifies that despite race conditions between clearing and accessing,
             // the mutex prevented any corruption
             val info = cached.cacheInfo()
-            assertTrue(info.hits >= 0 && info.misses >= 0 && info.currSize >= 0)
+            Assertions.assertTrue(info.hits >= 0 && info.misses >= 0 && info.currSize >= 0)
         }
 
         @Test
@@ -552,16 +551,16 @@ class CacheTest {
             // Check that all results are correct
             results.forEachIndexed { index, deferred ->
                 val key = index % 5
-                assertEquals(key * key, deferred.await())
+                Assertions.assertEquals(key * key, deferred.await())
             }
 
             // Check that LRU eviction worked correctly
             val info = cached.cacheInfo()
-            assertTrue(info.currSize <= 3) // Size should never exceed maxSize
+            Assertions.assertTrue(info.currSize <= 3) // Size should never exceed maxSize
 
             // Sum of all execution counts should match the total misses
             val totalExecutions = executionTracker.values.sumOf { it.get() }
-            assertEquals(info.misses, totalExecutions)
+            Assertions.assertEquals(info.misses, totalExecutions)
         }
 
         @Test
@@ -575,24 +574,24 @@ class CacheTest {
             }
 
             // Call with valid input should work
-            assertEquals(4, cached(2))
-            assertEquals(1, callCount.get())
+            Assertions.assertEquals(4, cached(2))
+            Assertions.assertEquals(1, callCount.get())
 
             // Call with invalid input should throw
             assertThrows<IllegalArgumentException> {
                 runBlocking { cached(0) }
             }
-            assertEquals(2, callCount.get())
+            Assertions.assertEquals(2, callCount.get())
 
             // Call again with invalid input should throw again (not cached)
             assertThrows<IllegalArgumentException> {
                 runBlocking { cached(0) }
             }
-            assertEquals(3, callCount.get())
+            Assertions.assertEquals(3, callCount.get())
 
             // Call with valid input should still work
-            assertEquals(4, cached(2))
-            assertEquals(3, callCount.get()) // Shouldn't increment (cached)
+            Assertions.assertEquals(4, cached(2))
+            Assertions.assertEquals(3, callCount.get()) // Shouldn't increment (cached)
         }
 
         @Test
@@ -619,11 +618,11 @@ class CacheTest {
 
             // If parallel execution works, this should take ~50ms, not ~250ms
             // Using a relaxed assertion with some buffer
-            assertTrue(duration < 200, "Parallel execution took too long: $duration ms")
+            Assertions.assertTrue(duration < 200, "Parallel execution took too long: $duration ms")
 
             // Ensure each key was computed exactly once
             for (i in 1..5) {
-                assertEquals(1, executionTimes[i]?.get() ?: 0)
+                Assertions.assertEquals(1, executionTimes[i]?.get() ?: 0)
             }
         }
     }

@@ -1,4 +1,4 @@
-package dev.hirth.functools
+package dev.hirth
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
