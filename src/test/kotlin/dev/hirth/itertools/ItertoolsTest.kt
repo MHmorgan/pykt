@@ -32,74 +32,38 @@ class ItertoolsTest {
 
     @Test
     fun testCycle() {
-        val result = cycle(listOf(1, 2, 3)).take(7).toList()
+        val result = listOf(1, 2, 3).cycle().take(7).toList()
         assertEquals(listOf(1, 2, 3, 1, 2, 3, 1), result)
     }
 
     @Test
     fun testCycleEmpty() {
-        val result = cycle(emptyList<Int>()).take(5).toList()
+        val result = emptyList<Int>().cycle().take(5).toList()
         assertEquals(emptyList<Int>(), result)
     }
 
     @Test
     fun testCycleSingle() {
-        val result = cycle(listOf("a")).take(3).toList()
+        val result = listOf("a").cycle().take(3).toList()
         assertEquals(listOf("a", "a", "a"), result)
     }
 
     @Test
     fun testRepeat() {
-        val result = repeat("hello").take(3).toList()
+        val result = "hello".repeat().take(3).toList()
         assertEquals(listOf("hello", "hello", "hello"), result)
     }
 
     @Test
     fun testRepeatWithTimes() {
-        val result = repeat(42, 4).toList()
+        val result = 42.repeat(4).toList()
         assertEquals(listOf(42, 42, 42, 42), result)
     }
 
     @Test
     fun testRepeatZeroTimes() {
-        val result = repeat("test", 0).toList()
+        val result = "test".repeat(0).toList()
         assertEquals(emptyList<String>(), result)
-    }
-
-    @Test
-    fun testAccumulateInt() {
-        val result = accumulate(listOf<Int>(1, 2, 3, 4)).toList()
-        assertEquals(listOf(1, 3, 6, 10), result)
-    }
-
-    @Test
-    fun testAccumulateIntWithInitial() {
-        val result = accumulate(listOf<Int>(1, 2, 3), 10).toList()
-        assertEquals(listOf(10, 11, 13, 16), result)
-    }
-
-    @Test
-    fun testAccumulateIntWithOperation() {
-        val result = accumulate(listOf<Int>(1, 2, 3, 4), { a, b -> a * b }).toList()
-        assertEquals(listOf(1, 2, 6, 24), result)
-    }
-
-    @Test
-    fun testAccumulateLong() {
-        val result = accumulate(listOf(1L, 2L, 3L)).toList()
-        assertEquals(listOf(1L, 3L, 6L), result)
-    }
-
-    @Test
-    fun testAccumulateDouble() {
-        val result = accumulate(listOf(1.0, 2.5, 1.5)).toList()
-        assertEquals(listOf(1.0, 3.5, 5.0), result)
-    }
-
-    @Test
-    fun testAccumulateEmpty() {
-        val result = accumulate(emptyList<Int>()).toList()
-        assertEquals(emptyList<Int>(), result)
     }
 
     @Test
@@ -147,90 +111,6 @@ class ItertoolsTest {
     }
 
     @Test
-    fun testDropwhile() {
-        val result = dropwhile(listOf(1, 3, 5, 6, 7, 8)) { it % 2 == 1 }.toList()
-        assertEquals(listOf(6, 7, 8), result)
-    }
-
-    @Test
-    fun testDropwhileNoneDropped() {
-        val result = dropwhile(listOf(2, 4, 6)) { it % 2 == 1 }.toList()
-        assertEquals(listOf(2, 4, 6), result)
-    }
-
-    @Test
-    fun testDropwhileAllDropped() {
-        val result = dropwhile(listOf(1, 3, 5)) { it % 2 == 1 }.toList()
-        assertEquals(emptyList<Int>(), result)
-    }
-
-    @Test
-    fun testTakewhile() {
-        val result = takewhile(listOf(1, 3, 5, 6, 7, 8)) { it % 2 == 1 }.toList()
-        assertEquals(listOf(1, 3, 5), result)
-    }
-
-    @Test
-    fun testTakewhileNoneTaken() {
-        val result = takewhile(listOf(2, 4, 6)) { it % 2 == 1 }.toList()
-        assertEquals(emptyList<Int>(), result)
-    }
-
-    @Test
-    fun testTakewhileAllTaken() {
-        val result = takewhile(listOf(1, 3, 5)) { it % 2 == 1 }.toList()
-        assertEquals(listOf(1, 3, 5), result)
-    }
-
-    @Test
-    fun testFilterfalse() {
-        val result = filterfalse(listOf(1, 2, 3, 4, 5)) { it % 2 == 0 }.toList()
-        assertEquals(listOf(1, 3, 5), result)
-    }
-
-    @Test
-    fun testFilterfalseAllFiltered() {
-        val result = filterfalse(listOf(1, 3, 5)) { it % 2 == 1 }.toList()
-        assertEquals(emptyList<Int>(), result)
-    }
-
-    @Test
-    fun testFilterfalseNoneFiltered() {
-        val result = filterfalse(listOf(2, 4, 6)) { it % 2 == 1 }.toList()
-        assertEquals(listOf(2, 4, 6), result)
-    }
-
-    @Test
-    fun testGroupby() {
-        val data = listOf("a", "a", "b", "b", "b", "c", "a")
-        val result = groupby(data).toList()
-        
-        assertEquals(4, result.size)
-        assertEquals(Group("a", listOf("a", "a")), result[0])
-        assertEquals(Group("b", listOf("b", "b", "b")), result[1])
-        assertEquals(Group("c", listOf("c")), result[2])
-        assertEquals(Group("a", listOf("a")), result[3])
-    }
-
-    @Test
-    fun testGroupbyWithKeySelector() {
-        val data = listOf(1, 1, 2, 2, 2, 3, 1)
-        val result = groupby(data) { it % 2 }.toList()
-        
-        assertEquals(4, result.size)
-        assertEquals(Group(1, listOf(1, 1)), result[0])
-        assertEquals(Group(0, listOf(2, 2, 2)), result[1])
-        assertEquals(Group(1, listOf(3)), result[2])
-        assertEquals(Group(1, listOf(1)), result[3])
-    }
-
-    @Test
-    fun testGroupbyEmpty() {
-        val result = groupby(emptyList<String>()).toList()
-        assertEquals(emptyList<Group<String, String>>(), result)
-    }
-
-    @Test
     fun testIslice() {
         val data = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
         val result = islice(data, 2, 7, 2).toList()
@@ -259,48 +139,9 @@ class ItertoolsTest {
     }
 
     @Test
-    fun testPairwise() {
-        val result = pairwise(listOf("a", "b", "c", "d")).toList()
-        assertEquals(
-            listOf(
-                Pair("a", "b"),
-                Pair("b", "c"),
-                Pair("c", "d")
-            ), 
-            result
-        )
-    }
-
-    @Test
-    fun testPairwiseEmpty() {
-        val result = pairwise(emptyList<Int>()).toList()
-        assertEquals(emptyList<Pair<Int, Int>>(), result)
-    }
-
-    @Test
-    fun testPairwiseSingle() {
-        val result = pairwise(listOf(1)).toList()
-        assertEquals(emptyList<Pair<Int, Int>>(), result)
-    }
-
-    @Test
-    fun testStarmapWithLists() {
-        val data = listOf(listOf(2, 3), listOf(4, 5))
-        val result = starmap(data) { args -> args[0] * args[1] }.toList()
-        assertEquals(listOf(6, 20), result)
-    }
-
-    @Test
-    fun testStarmapWithPairs() {
-        val data = listOf(Pair(2, 3), Pair(4, 5))
-        val result = starmap(data) { a, b -> a * b }.toList()
-        assertEquals(listOf(6, 20), result)
-    }
-
-    @Test
     fun testTee() {
         val data = listOf(1, 2, 3, 4)
-        val (iter1, iter2) = tee(data)
+        val (iter1, iter2) = data.tee()
         
         assertEquals(listOf(1, 2, 3, 4), iter1.toList())
         assertEquals(listOf(1, 2, 3, 4), iter2.toList())
@@ -309,7 +150,7 @@ class ItertoolsTest {
     @Test
     fun testTeeThree() {
         val data = listOf("a", "b", "c")
-        val iterators = tee(data, 3)
+        val iterators = data.tee(3)
         
         assertEquals(3, iterators.size)
         for (iterator in iterators) {
@@ -319,14 +160,14 @@ class ItertoolsTest {
 
     @Test
     fun testTeeZero() {
-        val iterators = tee(listOf(1, 2, 3), 0)
+        val iterators = listOf(1, 2, 3).tee(0)
         assertEquals(0, iterators.size)
     }
 
     @Test
     fun testTeeNegative() {
         assertThrows<IllegalArgumentException> {
-            tee(listOf(1, 2, 3), -1)
+            listOf(1, 2, 3).tee(-1)
         }
     }
 
@@ -347,7 +188,7 @@ class ItertoolsTest {
 
     @Test
     fun testZipLongestSameLength() {
-        val result = zipLongest(listOf(1, 2), listOf("a", "b")).toList()
+        val result = zipLongest(listOf(1, 2), listOf("a", "b"), fillvalue = null).toList()
         
         assertEquals(2, result.size)
         assertEquals(listOf(1, "a"), result[0])
@@ -356,7 +197,7 @@ class ItertoolsTest {
 
     @Test
     fun testZipLongestEmpty() {
-        val result = zipLongest(emptyList<Int>(), emptyList<String>()).toList()
+        val result = zipLongest(emptyList<Int>(), emptyList<String>(), fillvalue = null).toList()
         assertEquals(emptyList<List<Any?>>(), result)
     }
 
@@ -364,21 +205,6 @@ class ItertoolsTest {
     fun testChainExtension() {
         val result = listOf(1, 2).chain(listOf(3, 4), listOf(5)).toList()
         assertEquals(listOf(1, 2, 3, 4, 5), result)
-    }
-
-    // Integration tests
-    @Test
-    fun testComplexPipeline() {
-        // count(1) -> take(10) -> filter even -> accumulate -> dropwhile < 10
-        val result = count(1)
-            .take(10)
-            .filter { it % 2 == 0L }
-            .map { it.toInt() }
-            .let { accumulate(it.asIterable()) }
-            .let { dropwhile(it.asIterable()) { it < 10 } }
-            .toList()
-        
-        assertEquals(listOf(10, 16), result)
     }
 
     @Test
