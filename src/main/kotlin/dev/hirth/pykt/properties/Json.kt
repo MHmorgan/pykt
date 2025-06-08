@@ -25,8 +25,8 @@ class JsonRO<T : Any>(
     constructor(
         map: Map<String, String>,
         type: KClass<T>,
+        json: Json = Json,
         default: (String) -> T,
-        json: Json = Json
     ) : this(map, type, json) {
         this.default = default
     }
@@ -60,8 +60,8 @@ class NullableJsonRO<T : Any>(
     constructor(
         map: Map<String, String>,
         type: KClass<T>,
+        json: Json = Json,
         default: (String) -> T,
-        json: Json = Json
     ) : this(map, type, json) {
         this.default = default
     }
@@ -96,8 +96,8 @@ class JsonRW<T : Any>(
     constructor(
         map: MutableMap<String, String>,
         type: KClass<T>,
+        json: Json = Json,
         default: (String) -> T,
-        json: Json = Json
     ) : this(map, type, json) {
         this.default = default
     }
@@ -135,8 +135,8 @@ class NullableJsonRW<T : Any>(
     constructor(
         map: MutableMap<String, String>,
         type: KClass<T>,
+        json: Json = Json,
         default: (String) -> T,
-        json: Json = Json
     ) : this(map, type, json) {
         this.default = default
     }
