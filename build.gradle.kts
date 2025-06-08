@@ -13,7 +13,7 @@ plugins {
     `java-library`
 }
 
-group = "org.example"
+group = "dev.hirth"
 
 repositories {
     mavenCentral()
@@ -22,8 +22,6 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-
-    compileOnly("org.jetbrains:annotations:26.0.2") // IDE support annotations
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
     testImplementation("org.assertj:assertj-core:3.27.3")

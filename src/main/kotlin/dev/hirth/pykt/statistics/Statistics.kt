@@ -1,4 +1,4 @@
-package dev.hirth.statistics
+package dev.hirth.pykt.statistics
 
 import kotlin.math.pow
 import kotlin.math.sqrt

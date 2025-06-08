@@ -1,4 +1,4 @@
-package dev.hirth.csv
+package dev.hirth.pykt.csv
 
 /**
  * Exception raised for CSV parsing or writing errors.

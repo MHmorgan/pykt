@@ -1,8 +1,8 @@
-package dev.hirth.csv
+package dev.hirth.pykt.csv
 
-import dev.hirth.csv.CsvDictWriter.ExtrasAction
+import dev.hirth.pykt.csv.CsvDictWriter.ExtrasAction
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 
 class CsvDictWriterTest {

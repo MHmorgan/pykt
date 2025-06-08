@@ -1,4 +1,4 @@
-package dev.hirth.csv
+package dev.hirth.pykt.csv
 
 import java.io.Reader
 

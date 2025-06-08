@@ -1,4 +1,4 @@
-package dev.hirth.itertools
+package dev.hirth.pykt.itertools
 
 /**
  * Kotlin implementation of Python's itertools module.

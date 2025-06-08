@@ -1,4 +1,4 @@
-package dev.hirth.csv
+package dev.hirth.pykt.csv
 
 /**
  * Defines the quoting behavior for CSV fields.

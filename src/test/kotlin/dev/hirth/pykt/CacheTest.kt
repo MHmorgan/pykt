@@ -1,4 +1,4 @@
-package dev.hirth
+package dev.hirth.pykt
 
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.Assertions
