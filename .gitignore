@@ -36,3 +36,6 @@ build
 
 # MacOS
 .DS_Store
+
+# Kotlin LSP
+kls_database.db
