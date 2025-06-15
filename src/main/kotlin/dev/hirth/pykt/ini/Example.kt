@@ -93,16 +93,16 @@ fun main() {
     println("Features: A=${config.featureA}, B=${config.featureB}")
     println()
     
-    // 4. Modify configuration and write back
+    // 4. Modify configuration
     println("4. Modifying configuration:")
     iniFile.set("DEFAULT", "debug", "false")
     iniFile.set("database", "max_connections", "50")
     iniFile.set("features", "new_feature", "enabled")
     
-    // Write back to string
-    val modifiedConfig = writeIni(iniFile)
-    println("Modified configuration (first 300 chars):")
-    println(modifiedConfig.take(300) + "...")
+    println("Configuration successfully modified.")
+    println("Debug mode now: ${iniFile.get("DEFAULT", "debug")}")
+    println("Max connections now: ${iniFile.get("database", "max_connections")}")
+    println("New feature: ${iniFile.get("features", "new_feature")}")
     println()
     
     // 5. Demonstrate different dialects
