@@ -18,7 +18,7 @@ class JsonTest {
 
         class TestClass {
             val existingKey by JsonRO(map, Person::class, json)
-            val missingKey by JsonRO(map, Person::class, { Person("Default for $it", 0) }, json)
+            val missingKey by JsonRO(map, Person::class, json) { Person("Default for $it", 0) }
         }
 
         val testClass = TestClass()
@@ -35,7 +35,7 @@ class JsonTest {
         class TestClass {
             val existingKey by NullableJsonRO(map, Person::class, json)
             val missingKey by NullableJsonRO(map, Person::class, json)
-            val missingKeyWithDefault by NullableJsonRO(map, Person::class, { Person("Default for $it", 0) }, json)
+            val missingKeyWithDefault by NullableJsonRO(map, Person::class, json) { Person("Default for $it", 0) }
         }
 
         val testClass = TestClass()
@@ -52,7 +52,7 @@ class JsonTest {
 
         class TestClass {
             var existingKey by JsonRW(map, Person::class, json)
-            var missingKey by JsonRW(map, Person::class, { Person("Default for $it", 0) }, json)
+            var missingKey by JsonRW(map, Person::class, json) { Person("Default for $it", 0) }
         }
 
         val testClass = TestClass()
@@ -77,7 +77,7 @@ class JsonTest {
         class TestClass {
             var existingKey by NullableJsonRW(map, Person::class, json)
             var missingKey by NullableJsonRW(map, Person::class, json)
-            var missingKeyWithDefault by NullableJsonRW(map, Person::class, { Person("Default for $it", 0) }, json)
+            var missingKeyWithDefault by NullableJsonRW(map, Person::class, json) { Person("Default for $it", 0) }
         }
 
         val testClass = TestClass()
