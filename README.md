@@ -13,6 +13,42 @@ Read and write CSV files with [`CsvReader`](src/main/kotlin/dev/hirth/pykt/csv/C
 
 Inspired by python's `csv` module.
 
+### [TOML Support](src/main/kotlin/dev/hirth/pykt/toml)
+
+Read and write TOML files with full support for [TOML v1.0.0](https://toml.io/en/v1.0.0) specification.
+
+Features:
+- Parse TOML documents from strings, readers, or files
+- Write TOML documents using a Kotlin DSL
+- Support for all TOML data types (strings, integers, floats, booleans, dates, arrays, tables)
+- Inline tables and array of tables
+- Comments and multi-line strings
+- Proper escaping and Unicode support
+- Idiomatic Kotlin API with extension functions
+
+Example usage:
+```kotlin
+// Reading TOML
+val document = """
+    title = "My App"
+    [database]
+    host = "localhost"
+    port = 5432
+""".parseToml()
+
+val title = document.getString("title")
+val dbTable = document.getTable("database")
+
+// Writing TOML
+val toml = buildTomlString {
+    string("title", "My App")
+    table("database") {
+        string("host", "localhost")
+        integer("port", 5432)
+    }
+}
+```
+
 ### [Properties](src/main/kotlin/dev/hirth/pykt/properties)
 
 Property delegation helpers.
