@@ -23,7 +23,8 @@ fun <T : Number> mean(data: Iterable<T>): Double {
  * Calculate the arithmetic mean using a key function.
  */
 fun <T> mean(data: Iterable<T>, key: (T) -> Number): Double {
-    return mean(data.map { key(it) })
+    val values = data.map { key(it) }
+    return mean(values)
 }
 
 /**
@@ -47,7 +48,8 @@ fun <T : Number> median(data: Iterable<T>): Double {
  * Calculate the median using a key function.
  */
 fun <T> median(data: Iterable<T>, key: (T) -> Number): Double {
-    return median(data.map { key(it) })
+    val values = data.map { key(it) }
+    return median(values)
 }
 
 /**
@@ -111,14 +113,16 @@ fun <T : Number> variance(data: Iterable<T>, xbar: Double? = null): Double {
  * Calculate the population standard deviation.
  */
 fun <T : Number> pstdev(data: Iterable<T>, mu: Double? = null): Double {
-    return sqrt(pvariance(data, mu))
+    val variance = pvariance(data, mu)
+    return sqrt(variance)
 }
 
 /**
  * Calculate the sample standard deviation.
  */
 fun <T : Number> stdev(data: Iterable<T>, xbar: Double? = null): Double {
-    return sqrt(variance(data, xbar))
+    val variance = variance(data, xbar)
+    return sqrt(variance)
 }
 
 /**

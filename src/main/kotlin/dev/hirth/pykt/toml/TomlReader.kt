@@ -12,7 +12,15 @@ import java.time.format.DateTimeParseException
  * Exception thrown when parsing TOML content fails.
  */
 class TomlParseException(message: String, line: Int = -1, column: Int = -1, cause: Throwable? = null) :
-    Exception("${if (line > 0) "Line $line, column $column: " else ""}$message", cause)
+    Exception(buildMessage(message, line, column), cause) {
+    
+    companion object {
+        private fun buildMessage(message: String, line: Int, column: Int): String {
+            val prefix = if (line > 0) "Line $line, column $column: " else ""
+            return "$prefix$message"
+        }
+    }
+}
 
 /**
  * TOML parser that reads TOML content and produces a [TomlDocument].
@@ -35,7 +43,7 @@ class TomlReader {
 
         val document = TomlDocument()
         var currentTable = document.rootTable
-        var currentTablePath = ""
+        var tablePath = ""
 
         while (!isAtEnd()) {
             skipWhitespaceAndComments()
@@ -43,18 +51,18 @@ class TomlReader {
 
             when (peek()) {
                 '[' -> {
-                    val (tablePath, isArrayTable) = parseTableHeader()
-                    currentTablePath = tablePath
+                    val (path, isArrayTable) = parseTableHeader()
+                    tablePath = path
 
                     if (isArrayTable) {
                         // Array of tables
-                        val arrayTables = document.rootTable.arrayTables.getOrPut(tablePath) { mutableListOf() }
+                        val arrayTables = document.rootTable.arrayTables.getOrPut(path) { mutableListOf() }
                         val newTable = TomlTable()
                         arrayTables.add(newTable)
                         currentTable = newTable
                     } else {
                         // Regular table
-                        currentTable = document.getOrCreateTable(tablePath)
+                        currentTable = document.getOrCreateTable(path)
                     }
                 }
 
@@ -62,7 +70,7 @@ class TomlReader {
                     // Key-value pair
                     val (key, value) = parseKeyValue()
 
-                    if (currentTablePath.isEmpty()) {
+                    if (tablePath.isEmpty()) {
                         document.rootTable.values[key] = value
                     } else {
                         currentTable.values[key] = value
@@ -334,10 +342,9 @@ class TomlReader {
         val dateTimeStr = input.substring(start, position)
 
         // Try parsing as OffsetDateTime (with timezone)
-        if (dateTimeStr.contains('T') && (dateTimeStr.contains('+') || dateTimeStr.contains('-') || dateTimeStr.endsWith(
-                'Z'
-            ))
-        ) {
+        val hasTimePart = dateTimeStr.contains('T')
+        val hasOffset = dateTimeStr.contains('+') || dateTimeStr.contains('-') || dateTimeStr.endsWith('Z')
+        if (hasTimePart && hasOffset) {
             try {
                 return TomlValue.OffsetDateTime(OffsetDateTime.parse(dateTimeStr))
             } catch (e: DateTimeParseException) {
