@@ -47,7 +47,7 @@ fun InputStream.parseSexps(): List<Sexp> = reader().use { it.readText().parseSex
 /**
  * Extension function to parse S-expressions from an InputStream with a callback.
  */
-fun InputStream.parseSexp(callback: (Sexp) -> Unit) = 
+fun InputStream.parseSexp(callback: (Sexp) -> Unit) =
     reader().use { it.readText().parseSexp(callback) }
 
 /**
