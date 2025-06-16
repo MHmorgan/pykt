@@ -2,6 +2,7 @@ package dev.hirth.pykt.sexp
 
 import java.io.File
 import java.io.InputStream
+import kotlin.reflect.KProperty
 
 /**
  * Configuration reader for S-expression based config files.
@@ -252,5 +253,219 @@ class SexpConfig(private val sexp: Sexp) {
                 }
             }
         }
+    }
+
+    // Property delegation support
+
+    /**
+     * Creates a string property delegate for the given path.
+     * The property will return the string value at the path or throw an exception if not found.
+     */
+    fun stringDelegate(path: String): SexpStringDelegate = SexpStringDelegate(this, path)
+
+    /**
+     * Creates a nullable string property delegate for the given path.
+     * The property will return the string value at the path or null if not found.
+     */
+    fun nullableStringDelegate(path: String): SexpNullableStringDelegate = SexpNullableStringDelegate(this, path)
+
+    /**
+     * Creates an integer property delegate for the given path.
+     * The property will return the integer value at the path or throw an exception if not found.
+     */
+    fun intDelegate(path: String): SexpIntDelegate = SexpIntDelegate(this, path)
+
+    /**
+     * Creates a nullable integer property delegate for the given path.
+     * The property will return the integer value at the path or null if not found.
+     */
+    fun nullableIntDelegate(path: String): SexpNullableIntDelegate = SexpNullableIntDelegate(this, path)
+
+    /**
+     * Creates a long property delegate for the given path.
+     * The property will return the long value at the path or throw an exception if not found.
+     */
+    fun longDelegate(path: String): SexpLongDelegate = SexpLongDelegate(this, path)
+
+    /**
+     * Creates a nullable long property delegate for the given path.
+     * The property will return the long value at the path or null if not found.
+     */
+    fun nullableLongDelegate(path: String): SexpNullableLongDelegate = SexpNullableLongDelegate(this, path)
+
+    /**
+     * Creates a double property delegate for the given path.
+     * The property will return the double value at the path or throw an exception if not found.
+     */
+    fun doubleDelegate(path: String): SexpDoubleDelegate = SexpDoubleDelegate(this, path)
+
+    /**
+     * Creates a nullable double property delegate for the given path.
+     * The property will return the double value at the path or null if not found.
+     */
+    fun nullableDoubleDelegate(path: String): SexpNullableDoubleDelegate = SexpNullableDoubleDelegate(this, path)
+
+    /**
+     * Creates a boolean property delegate for the given path.
+     * The property will return the boolean value at the path or throw an exception if not found.
+     */
+    fun booleanDelegate(path: String): SexpBooleanDelegate = SexpBooleanDelegate(this, path)
+
+    /**
+     * Creates a nullable boolean property delegate for the given path.
+     * The property will return the boolean value at the path or null if not found.
+     */
+    fun nullableBooleanDelegate(path: String): SexpNullableBooleanDelegate = SexpNullableBooleanDelegate(this, path)
+
+    /**
+     * Creates a list property delegate for the given path.
+     * The property will return the list of S-expressions at the path or throw an exception if not found.
+     */
+    fun listDelegate(path: String): SexpListDelegate = SexpListDelegate(this, path)
+
+    /**
+     * Creates a nullable list property delegate for the given path.
+     * The property will return the list of S-expressions at the path or null if not found.
+     */
+    fun nullableListDelegate(path: String): SexpNullableListDelegate = SexpNullableListDelegate(this, path)
+
+    /**
+     * Creates a string list property delegate for the given path.
+     * The property will return the list of strings at the path or throw an exception if not found.
+     */
+    fun stringListDelegate(path: String): SexpStringListDelegate = SexpStringListDelegate(this, path)
+
+    /**
+     * Creates a nullable string list property delegate for the given path.
+     * The property will return the list of strings at the path or null if not found.
+     */
+    fun nullableStringListDelegate(path: String): SexpNullableStringListDelegate = SexpNullableStringListDelegate(this, path)
+}
+
+// Property delegate classes
+
+/**
+ * Property delegate for string values.
+ */
+class SexpStringDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return config.getStringValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable string values.
+ */
+class SexpNullableStringDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String? {
+        return config.getString(path)
+    }
+}
+
+/**
+ * Property delegate for integer values.
+ */
+class SexpIntDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Int {
+        return config.getIntValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable integer values.
+ */
+class SexpNullableIntDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Int? {
+        return config.getInt(path)
+    }
+}
+
+/**
+ * Property delegate for long values.
+ */
+class SexpLongDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Long {
+        return config.getLongValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable long values.
+ */
+class SexpNullableLongDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Long? {
+        return config.getLong(path)
+    }
+}
+
+/**
+ * Property delegate for double values.
+ */
+class SexpDoubleDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Double {
+        return config.getDoubleValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable double values.
+ */
+class SexpNullableDoubleDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Double? {
+        return config.getDouble(path)
+    }
+}
+
+/**
+ * Property delegate for boolean values.
+ */
+class SexpBooleanDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+        return config.getBooleanValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable boolean values.
+ */
+class SexpNullableBooleanDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean? {
+        return config.getBoolean(path)
+    }
+}
+
+/**
+ * Property delegate for list values.
+ */
+class SexpListDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): List<Sexp> {
+        return config.getListValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable list values.
+ */
+class SexpNullableListDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): List<Sexp>? {
+        return config.getList(path)
+    }
+}
+
+/**
+ * Property delegate for string list values.
+ */
+class SexpStringListDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): List<String> {
+        return config.getStringListValue(path)
+    }
+}
+
+/**
+ * Property delegate for nullable string list values.
+ */
+class SexpNullableStringListDelegate(private val config: SexpConfig, private val path: String) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): List<String>? {
+        return config.getStringList(path)
     }
 }

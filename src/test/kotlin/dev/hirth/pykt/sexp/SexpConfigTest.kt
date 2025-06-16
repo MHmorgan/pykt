@@ -237,4 +237,78 @@ class SexpConfigTest {
         assertEquals(0, specialConfig.getInt("config.zero"))
         assertEquals(-1, specialConfig.getInt("config.negative"))
     }
+
+    @Test
+    fun testPropertyDelegation() {
+        val configText = """
+            (server
+             (host "localhost")
+             (port 8080)
+             (ssl
+              (enabled true)
+              (keystore "/path/to/keystore"))
+             (features (auth logging))
+             (timeout 30.5))
+        """
+
+        val config = SexpConfig(configText)
+
+        // String delegation
+        val host: String by config.stringDelegate("server.host")
+        val keystorePath: String? by config.nullableStringDelegate("server.ssl.keystore")
+        val nonExistent: String? by config.nullableStringDelegate("server.nonexistent")
+
+        assertEquals("localhost", host)
+        assertEquals("/path/to/keystore", keystorePath)
+        assertNull(nonExistent)
+
+        // Integer delegation
+        val port: Int by config.intDelegate("server.port")
+        val maxConnections: Int? by config.nullableIntDelegate("server.max-connections")
+
+        assertEquals(8080, port)
+        assertNull(maxConnections)
+
+        // Boolean delegation
+        val sslEnabled: Boolean by config.booleanDelegate("server.ssl.enabled")
+        val debugMode: Boolean? by config.nullableBooleanDelegate("server.debug")
+
+        assertTrue(sslEnabled)
+        assertNull(debugMode)
+
+        // Double delegation
+        val timeout: Double by config.doubleDelegate("server.timeout")
+        val maxSize: Double? by config.nullableDoubleDelegate("server.max-size")
+
+        assertEquals(30.5, timeout, 0.001)
+        assertNull(maxSize)
+
+        // List delegation
+        val features: List<String> by config.stringListDelegate("server.features")
+        val plugins: List<String>? by config.nullableStringListDelegate("server.plugins")
+
+        assertEquals(listOf("auth", "logging"), features)
+        assertNull(plugins)
+    }
+
+    @Test
+    fun testPropertyDelegationExceptions() {
+        val config = SexpConfig("(server (host \"localhost\"))")
+
+        // Test exceptions for required delegates
+        assertThrows<IllegalArgumentException> {
+            val nonExistent: String by config.stringDelegate("server.nonexistent")
+            nonExistent // Access the property to trigger the exception
+        }
+
+        assertThrows<IllegalArgumentException> {
+            val nonExistent: Int by config.intDelegate("server.nonexistent")
+            nonExistent
+        }
+
+        assertThrows<NumberFormatException> {
+            val invalidInt: Int by config.intDelegate("server.host") // "localhost" is not a valid integer
+            invalidInt
+        }
+    }
 }
