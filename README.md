@@ -7,6 +7,18 @@ Only created for the JVM target.
 
 ## Components
 
+### [S-expressions](src/main/kotlin/dev/hirth/pykt/sexp)
+
+Complete S-expression parsing and manipulation library with support for configuration files.
+
+Inspired by OCaml's `Sexp` from `core`.
+
+Key features:
+- Kotlin-idiomatic API with extension functions (`String.parseSexp()`, `File.parseSexp()`)
+- Callback-based parsing support
+- Configuration file support with typed getters (`SexpConfig`)
+- Comprehensive error handling and validation
+
 ### [CSV Support](src/main/kotlin/dev/hirth/pykt/csv)
 
 Read and write CSV files with [`CsvReader`](src/main/kotlin/dev/hirth/pykt/csv/CsvReader.kt) and [`CsvWriter`](src/main/kotlin/dev/hirth/pykt/csv/CsvWriter.kt).
