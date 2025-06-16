@@ -57,8 +57,9 @@ class IniReader(
                                 if (currentValue.isNotEmpty()) {
                                     currentValue.append('\n')
                                 }
-                                val continuationContent = rawLine.removePrefix(dialect.continuationPrefix)
-                                currentValue.append(if (dialect.trimWhitespace) continuationContent.trim() else continuationContent)
+                                val raw = rawLine.removePrefix(dialect.continuationPrefix)
+                                val content = if (dialect.trimWhitespace) raw.trim() else raw
+                                currentValue.append(content)
                             } else if (dialect.strict) {
                                 throw IniError("Multiline values not allowed at line $lineNumber")
                             }

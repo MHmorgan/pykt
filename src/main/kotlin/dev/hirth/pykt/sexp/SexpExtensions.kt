@@ -37,18 +37,27 @@ fun File.parseSexp(callback: (Sexp) -> Unit) = readText().parseSexp(callback)
 /**
  * Extension function to parse S-expressions from an InputStream.
  */
-fun InputStream.parseSexp(): Sexp = reader().use { it.readText().parseSexp() }
+fun InputStream.parseSexp(): Sexp = reader().use { reader ->
+    val text = reader.readText()
+    text.parseSexp()
+}
 
 /**
  * Extension function to parse multiple S-expressions from an InputStream.
  */
-fun InputStream.parseSexps(): List<Sexp> = reader().use { it.readText().parseSexps() }
+fun InputStream.parseSexps(): List<Sexp> = reader().use { reader ->
+    val text = reader.readText()
+    text.parseSexps()
+}
 
 /**
  * Extension function to parse S-expressions from an InputStream with a callback.
  */
 fun InputStream.parseSexp(callback: (Sexp) -> Unit) =
-    reader().use { it.readText().parseSexp(callback) }
+    reader().use { reader ->
+        val text = reader.readText()
+        text.parseSexp(callback)
+    }
 
 /**
  * Extension function to parse S-expressions from a Reader.
@@ -102,18 +111,27 @@ fun File.parseSexpWithVariables(callback: (Sexp) -> Unit) = readText().parseSexp
 /**
  * Extension function to parse S-expressions from an InputStream with variable support.
  */
-fun InputStream.parseSexpWithVariables(): Sexp = reader().use { it.readText().parseSexpWithVariables() }
+fun InputStream.parseSexpWithVariables(): Sexp = reader().use { reader ->
+    val text = reader.readText()
+    text.parseSexpWithVariables()
+}
 
 /**
  * Extension function to parse multiple S-expressions from an InputStream with variable support.
  */
-fun InputStream.parseSexpsWithVariables(): List<Sexp> = reader().use { it.readText().parseSexpsWithVariables() }
+fun InputStream.parseSexpsWithVariables(): List<Sexp> = reader().use { reader ->
+    val text = reader.readText()
+    text.parseSexpsWithVariables()
+}
 
 /**
  * Extension function to parse S-expressions from an InputStream with variable support and a callback.
  */
 fun InputStream.parseSexpWithVariables(callback: (Sexp) -> Unit) =
-    reader().use { it.readText().parseSexpWithVariables(callback) }
+    reader().use { reader ->
+        val text = reader.readText()
+        text.parseSexpWithVariables(callback)
+    }
 
 /**
  * Extension function to parse S-expressions from a Reader with variable support.
