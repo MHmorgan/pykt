@@ -1,7 +1,7 @@
 Pykt
 ====
 
-`pykt` is contains functionality I am missing from Kotlin's standard library.
+`pykt` contains functionality missing from Kotlin's standard library.
 
 Only created for the JVM target.
 
