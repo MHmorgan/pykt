@@ -10,7 +10,7 @@ class IniReader(
     private val dialect: IniDialect = IniDialect.DEFAULT
 ) {
     private var lineNumber = 0
-    
+
     /**
      * Parse the INI content and return an IniFile.
      */
@@ -19,12 +19,12 @@ class IniReader(
         var currentSectionName = dialect.defaultSectionName
         var currentKey: String? = null
         var currentValue = StringBuilder()
-        
+
         reader.useLines { lines ->
             for (rawLine in lines) {
                 lineNumber++
                 val line = if (dialect.trimWhitespace) rawLine.trim() else rawLine
-                
+
                 try {
                     when {
                         // Empty line or comment
@@ -34,7 +34,7 @@ class IniReader(
                             currentValue = StringBuilder()
                             continue
                         }
-                        
+
                         // Section header
                         isSection(line) -> {
                             finalizePendingKeyValue(iniFile, currentSectionName, currentKey, currentValue)
@@ -42,7 +42,7 @@ class IniReader(
                             currentValue = StringBuilder()
                             currentSectionName = parseSectionName(line)
                         }
-                        
+
                         // Key-value pair (check this before continuation to handle indented key-value pairs)
                         hasKeyValueSeparator(line) -> {
                             finalizePendingKeyValue(iniFile, currentSectionName, currentKey, currentValue)
@@ -50,7 +50,7 @@ class IniReader(
                             currentKey = key
                             currentValue = StringBuilder(value)
                         }
-                        
+
                         // Continuation line (check against raw line for proper indentation detection)
                         isContinuation(rawLine) && currentKey != null -> {
                             if (dialect.allowMultilineValues) {
@@ -63,7 +63,7 @@ class IniReader(
                                 throw IniError("Multiline values not allowed at line $lineNumber")
                             }
                         }
-                        
+
                         // Key without value (if allowed)
                         else -> {
                             finalizePendingKeyValue(iniFile, currentSectionName, currentKey, currentValue)
@@ -82,55 +82,55 @@ class IniReader(
                 }
             }
         }
-        
+
         // Finalize any pending key-value pair
         finalizePendingKeyValue(iniFile, currentSectionName, currentKey, currentValue)
-        
+
         return iniFile
     }
-    
+
     private fun finalizePendingKeyValue(iniFile: IniFile, sectionName: String, key: String?, value: StringBuilder) {
         if (key != null) {
             val finalValue = value.toString()
             iniFile.set(sectionName, key, finalValue)
         }
     }
-    
+
     private fun isComment(line: String): Boolean {
         return line.isNotEmpty() && dialect.commentPrefixes.contains(line[0])
     }
-    
+
     private fun isSection(line: String): Boolean {
         return line.startsWith('[') && line.endsWith(']')
     }
-    
+
     private fun isContinuation(rawLine: String): Boolean {
         return dialect.allowMultilineValues && rawLine.startsWith(dialect.continuationPrefix)
     }
-    
+
     private fun hasKeyValueSeparator(line: String): Boolean {
         return dialect.separators.any { line.contains(it) }
     }
-    
+
     private fun parseSectionName(line: String): String {
         if (!isSection(line)) {
             throw IniError("Invalid section header at line $lineNumber: $line")
         }
-        
+
         val sectionName = line.substring(1, line.length - 1)
-        
+
         if (dialect.trimWhitespace) {
             return sectionName.trim()
         }
-        
+
         return sectionName
     }
-    
+
     private fun parseKeyValue(line: String): Pair<String, String> {
         // Find the first separator
         var separatorIndex = -1
         var separatorChar: Char? = null
-        
+
         for (i in line.indices) {
             if (dialect.separators.contains(line[i])) {
                 separatorIndex = i
@@ -138,7 +138,7 @@ class IniReader(
                 break
             }
         }
-        
+
         if (separatorIndex == -1) {
             // No separator found
             if (dialect.allowKeysWithoutValues) {
@@ -152,21 +152,21 @@ class IniReader(
                 return key to ""
             }
         }
-        
+
         val keyPart = line.substring(0, separatorIndex)
         val valuePart = line.substring(separatorIndex + 1)
-        
+
         val key = if (dialect.trimWhitespace) keyPart.trim() else keyPart
         val value = if (dialect.trimWhitespace) valuePart.trim() else valuePart
-        
+
         if (key.isEmpty() && dialect.strict) {
             throw IniError("Empty key at line $lineNumber: $line")
         }
-        
+
         if (value.isEmpty() && !dialect.allowEmptyValues && dialect.strict) {
             throw IniError("Empty value not allowed at line $lineNumber: $line")
         }
-        
+
         return key to value
     }
 }

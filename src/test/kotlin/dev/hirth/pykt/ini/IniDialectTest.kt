@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class IniDialectTest {
-    
+
     @Test
     fun testDefaultDialect() {
         val dialect = IniDialect.DEFAULT
-        
+
         assertEquals(setOf('=', ':'), dialect.separators)
         assertEquals(setOf('#', ';'), dialect.commentPrefixes)
         assertEquals(false, dialect.caseSensitive)
@@ -21,11 +21,11 @@ class IniDialectTest {
         assertEquals("DEFAULT", dialect.defaultSectionName)
         assertEquals(true, dialect.strict)
     }
-    
+
     @Test
     fun testPermissiveDialect() {
         val dialect = IniDialect.PERMISSIVE
-        
+
         assertEquals(setOf('=', ':'), dialect.separators)
         assertEquals(setOf('#', ';'), dialect.commentPrefixes)
         assertEquals(false, dialect.caseSensitive)
@@ -38,11 +38,11 @@ class IniDialectTest {
         assertEquals("DEFAULT", dialect.defaultSectionName)
         assertEquals(false, dialect.strict)
     }
-    
+
     @Test
     fun testPropertiesDialect() {
         val dialect = IniDialect.PROPERTIES
-        
+
         assertEquals(setOf('=', ':'), dialect.separators)
         assertEquals(setOf('#', '!'), dialect.commentPrefixes)
         assertEquals(false, dialect.caseSensitive)
@@ -55,7 +55,7 @@ class IniDialectTest {
         assertEquals("", dialect.defaultSectionName)
         assertEquals(true, dialect.strict)
     }
-    
+
     @Test
     fun testCustomDialect() {
         val dialect = IniDialect(
@@ -65,7 +65,7 @@ class IniDialectTest {
             trimWhitespace = false,
             strict = false
         )
-        
+
         assertEquals(setOf('='), dialect.separators)
         assertEquals(setOf('#'), dialect.commentPrefixes)
         assertEquals(true, dialect.caseSensitive)
