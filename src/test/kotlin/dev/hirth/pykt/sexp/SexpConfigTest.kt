@@ -311,4 +311,114 @@ class SexpConfigTest {
             invalidInt
         }
     }
+
+    @Test
+    fun testVariableDefinitions() {
+        val configText = """
+            (define project-name "Smith")
+            (define base-port 8000)
+            (define feature-list (auth logging metrics))
+            
+            (project
+             (name project-name)
+             (server
+              (host "localhost")
+              (port base-port)
+              (features feature-list)))
+        """
+
+        val config = SexpConfig(configText, true)
+
+        assertEquals("Smith", config.getStringValue("project.name"))
+        assertEquals(8000, config.getIntValue("project.server.port"))
+        assertEquals("localhost", config.getStringValue("project.server.host"))
+        assertEquals(listOf("auth", "logging", "metrics"), config.getStringListValue("project.server.features"))
+    }
+
+    @Test
+    fun testVariableDefinitionsWithNestedValues() {
+        val configText = """
+            (define db-host "localhost")
+            (define db-port 5432)
+            (define db-config (host db-host port db-port database "myapp"))
+            
+            (application
+             (database db-config))
+        """
+
+        val config = SexpConfig(configText, true)
+
+        assertEquals("localhost", config.getStringValue("application.database.host"))
+        assertEquals(5432, config.getIntValue("application.database.port"))
+        assertEquals("myapp", config.getStringValue("application.database.database"))
+    }
+
+    @Test
+    fun testVariableDefinitionsWithoutSupport() {
+        val configText = """
+            (define project-name "Smith")
+            (project
+             (name project-name))
+        """
+
+        // Without variable support, 'define' should be treated as a regular list
+        val config = SexpConfig(configText, false)
+
+        // The define statement should be present as a regular list
+        assertTrue(config.has("define"))
+        assertEquals("Smith", config.getStringValue("define.project-name"))
+        
+        // The variable reference should remain as-is
+        assertEquals("project-name", config.getStringValue("project.name"))
+    }
+
+    @Test
+    fun testVariableDefinitionsInExtensions() {
+        val configText = """
+            (define api-key "secret-key-123")
+            (define timeout 30)
+            
+            (service
+             (auth
+              (key api-key)
+              (timeout timeout)))
+        """
+
+        // Test parsing with variables using extension functions
+        val sexp = configText.parseSexpWithVariables()
+        val config = SexpConfig(sexp)
+
+        assertEquals("secret-key-123", config.getStringValue("service.auth.key"))
+        assertEquals(30, config.getIntValue("service.auth.timeout"))
+    }
+
+    @Test
+    fun testVariableErrors() {
+        // Test undefined variable reference
+        val configWithUndefinedVar = """
+            (project
+             (name undefined-variable))
+        """
+
+        val config = SexpConfig(configWithUndefinedVar, true)
+        // Undefined variables should remain as atoms
+        assertEquals("undefined-variable", config.getStringValue("project.name"))
+
+        // Test malformed define statement
+        assertThrows<SexpParseException> {
+            val malformedDefine = """
+                (define)
+                (project (name "test"))
+            """
+            SexpConfig(malformedDefine, true)
+        }
+
+        assertThrows<SexpParseException> {
+            val malformedDefine = """
+                (define var-name)
+                (project (name "test"))
+            """
+            SexpConfig(malformedDefine, true)
+        }
+    }
 }

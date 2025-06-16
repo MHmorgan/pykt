@@ -17,6 +17,27 @@ class SexpConfig(private val sexp: Sexp) {
     constructor(inputStream: InputStream) : this(inputStream.parseSexp())
 
     /**
+     * Constructor that parses S-expressions with variable support.
+     */
+    constructor(input: String, supportVariables: Boolean) : this(
+        if (supportVariables) {
+            val results = input.parseSexpsWithVariables()
+            if (results.size == 1) results[0] else Sexp.List(results)
+        } else {
+            val results = input.parseSexps()
+            if (results.size == 1) results[0] else Sexp.List(results)
+        }
+    )
+
+    constructor(file: File, supportVariables: Boolean) : this(
+        file.readText(), supportVariables
+    )
+
+    constructor(inputStream: InputStream, supportVariables: Boolean) : this(
+        inputStream.reader().use { it.readText() }, supportVariables
+    )
+
+    /**
      * Gets a configuration value by path.
      *
      * @param path Dot-separated path to the configuration value
@@ -217,6 +238,21 @@ class SexpConfig(private val sexp: Sexp) {
                             }
                         }
                     }
+                }
+
+                // If not found as key-value pairs, check for flat key-value format
+                // (key1 value1 key2 value2 ...)
+                var i = 0
+                while (i < sexp.elements.size - 1) {
+                    val keyElement = sexp.elements[i]
+                    if (keyElement is Sexp.Atom && keyElement.value == key) {
+                        return if (remaining.isEmpty()) {
+                            sexp.elements[i + 1]
+                        } else {
+                            getByPath(sexp.elements[i + 1], remaining)
+                        }
+                    }
+                    i += 2 // Skip key-value pairs
                 }
 
                 null

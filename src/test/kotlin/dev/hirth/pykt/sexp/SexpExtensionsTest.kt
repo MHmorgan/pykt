@@ -129,4 +129,79 @@ class SexpExtensionsTest {
             Sexp.atom("test").map { it }
         }
     }
+
+    @Test
+    fun testVariableExtensions() {
+        val configText = """
+            (define project-name "MyProject")
+            (define version 1.0)
+            
+            (project
+             (name project-name)
+             (version version))
+        """
+
+        // Test parsing with variables
+        val sexp = configText.parseSexpWithVariables()
+        assertTrue(sexp is Sexp.List)
+        val list = sexp as Sexp.List
+        assertEquals(1, list.elements.size) // Only the project element should remain
+
+        val project = list.elements[0] as Sexp.List
+        assertEquals("project", (project.elements[0] as Sexp.Atom).value)
+
+        // Test parsing multiple S-expressions with variables
+        val multipleText = """
+            (define base-url "https://api.example.com")
+            
+            (service
+             (url base-url)
+             (timeout 30))
+             
+            (client
+             (endpoint base-url))
+        """
+
+        val multiple = multipleText.parseSexpsWithVariables()
+        assertEquals(2, multiple.size) // Only service and client should remain
+
+        val service = multiple[0] as Sexp.List
+        assertEquals("service", (service.elements[0] as Sexp.Atom).value)
+        val url = ((service.elements[1] as Sexp.List).elements[1] as Sexp.Atom).value
+        assertEquals("https://api.example.com", url)
+
+        // Test callback with variables
+        val collected = mutableListOf<Sexp>()
+        multipleText.parseSexpWithVariables { collected.add(it) }
+        assertEquals(2, collected.size)
+    }
+
+    @Test
+    fun testVariableExtensionsFile() {
+        val tempFile = File.createTempFile("sexp-var-test", ".sexp")
+        tempFile.deleteOnExit()
+        tempFile.writeText("""
+            (define app-name "TestApp")
+            (define debug-mode true)
+            
+            (application
+             (name app-name)
+             (debug debug-mode))
+        """)
+
+        val result = tempFile.parseSexpWithVariables()
+        assertTrue(result is Sexp.List)
+        val list = result as Sexp.List
+        assertEquals(1, list.elements.size)
+
+        val app = list.elements[0] as Sexp.List
+        assertEquals("application", (app.elements[0] as Sexp.Atom).value)
+        
+        // Check that variables were resolved
+        val name = ((app.elements[1] as Sexp.List).elements[1] as Sexp.Atom).value
+        assertEquals("TestApp", name)
+        
+        val debug = ((app.elements[2] as Sexp.List).elements[1] as Sexp.Atom).value
+        assertEquals("true", debug)
+    }
 }

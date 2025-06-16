@@ -66,6 +66,71 @@ fun Reader.parseSexps(): List<Sexp> = readText().parseSexps()
 fun Reader.parseSexp(callback: (Sexp) -> Unit) = readText().parseSexp(callback)
 
 /**
+ * Extension functions for parsing S-expressions with variable support.
+ */
+
+/**
+ * Extension function to parse a single S-expression from a string with variable support.
+ */
+fun String.parseSexpWithVariables(): Sexp = sexpReader.readOneWithVariables(this)
+
+/**
+ * Extension function to parse multiple S-expressions from a string with variable support.
+ */
+fun String.parseSexpsWithVariables(): List<Sexp> = sexpReader.readManyWithVariables(this)
+
+/**
+ * Extension function to parse S-expressions from a string with variable support and a callback.
+ */
+fun String.parseSexpWithVariables(callback: (Sexp) -> Unit) = sexpReader.readWithVariablesAndCallback(this, callback)
+
+/**
+ * Extension function to parse S-expressions from a File with variable support.
+ */
+fun File.parseSexpWithVariables(): Sexp = readText().parseSexpWithVariables()
+
+/**
+ * Extension function to parse multiple S-expressions from a File with variable support.
+ */
+fun File.parseSexpsWithVariables(): List<Sexp> = readText().parseSexpsWithVariables()
+
+/**
+ * Extension function to parse S-expressions from a File with variable support and a callback.
+ */
+fun File.parseSexpWithVariables(callback: (Sexp) -> Unit) = readText().parseSexpWithVariables(callback)
+
+/**
+ * Extension function to parse S-expressions from an InputStream with variable support.
+ */
+fun InputStream.parseSexpWithVariables(): Sexp = reader().use { it.readText().parseSexpWithVariables() }
+
+/**
+ * Extension function to parse multiple S-expressions from an InputStream with variable support.
+ */
+fun InputStream.parseSexpsWithVariables(): List<Sexp> = reader().use { it.readText().parseSexpsWithVariables() }
+
+/**
+ * Extension function to parse S-expressions from an InputStream with variable support and a callback.
+ */
+fun InputStream.parseSexpWithVariables(callback: (Sexp) -> Unit) =
+    reader().use { it.readText().parseSexpWithVariables(callback) }
+
+/**
+ * Extension function to parse S-expressions from a Reader with variable support.
+ */
+fun Reader.parseSexpWithVariables(): Sexp = readText().parseSexpWithVariables()
+
+/**
+ * Extension function to parse multiple S-expressions from a Reader with variable support.
+ */
+fun Reader.parseSexpsWithVariables(): List<Sexp> = readText().parseSexpsWithVariables()
+
+/**
+ * Extension function to parse S-expressions from a Reader with variable support and a callback.
+ */
+fun Reader.parseSexpWithVariables(callback: (Sexp) -> Unit) = readText().parseSexpWithVariables(callback)
+
+/**
  * Convenience functions for creating S-expressions.
  */
 
