@@ -31,15 +31,13 @@ internal class SexpParserWithVariables(private val tokens: List<SexpToken>) {
     fun parseOne(): Sexp {
         val results = parse()
         
-        if (results.isEmpty()) {
+        return if (results.isEmpty()) {
             throw SexpParseException("No expressions found after processing define statements")
+        } else {
+            // Always wrap results in a list when using variable parsing,
+            // since we're typically parsing multi-expression input
+            Sexp.List(results)
         }
-        
-        if (results.size > 1) {
-            throw SexpParseException("Expected single expression but found ${results.size} after processing define statements")
-        }
-        
-        return results[0]
     }
 
     private fun parseExpression(): Sexp {
@@ -116,7 +114,14 @@ internal class SexpParserWithVariables(private val tokens: List<SexpToken>) {
                 symbolTable[expr.value] ?: expr
             }
             is Sexp.List -> {
-                Sexp.List(expr.elements.map { resolveVariables(it) })
+                if (expr.elements.isEmpty()) {
+                    expr
+                } else {
+                    // Don't resolve variables in the first element (operator/key position)
+                    val first = expr.elements.first()
+                    val rest = expr.elements.drop(1).map { resolveVariables(it) }
+                    Sexp.List(listOf(first) + rest)
+                }
             }
         }
     }

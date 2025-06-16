@@ -385,8 +385,7 @@ class SexpConfigTest {
         """
 
         // Test parsing with variables using extension functions
-        val sexp = configText.parseSexpWithVariables()
-        val config = SexpConfig(sexp)
+        val config = SexpConfig(configText, true)
 
         assertEquals("secret-key-123", config.getStringValue("service.auth.key"))
         assertEquals(30, config.getIntValue("service.auth.timeout"))
