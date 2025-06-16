@@ -1,10 +1,5 @@
 package dev.hirth.pykt.toml
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.OffsetDateTime
-
 /**
  * Represents a TOML value according to TOML v1.0.0 specification.
  */
@@ -69,7 +64,7 @@ data class TomlTable(
     val tables: MutableMap<String, TomlTable> = mutableMapOf(),
     val arrayTables: MutableMap<String, MutableList<TomlTable>> = mutableMapOf()
 ) {
-    
+
     /**
      * Gets a value by key path (e.g., "a.b.c")
      */
@@ -78,14 +73,14 @@ data class TomlTable(
         if (parts.size == 1) {
             return values[key]
         }
-        
+
         var currentTable = this
         for (i in 0 until parts.size - 1) {
             currentTable = currentTable.tables[parts[i]] ?: return null
         }
         return currentTable.values[parts.last()]
     }
-    
+
     /**
      * Gets a table by key path
      */
@@ -94,14 +89,14 @@ data class TomlTable(
         if (parts.size == 1) {
             return tables[key]
         }
-        
+
         var currentTable = this
         for (part in parts) {
             currentTable = currentTable.tables[part] ?: return null
         }
         return currentTable
     }
-    
+
     /**
      * Sets a value by key path
      */
@@ -111,21 +106,21 @@ data class TomlTable(
             values[key] = value
             return
         }
-        
+
         var currentTable = this
         for (i in 0 until parts.size - 1) {
             currentTable = currentTable.tables.getOrPut(parts[i]) { TomlTable() }
         }
         currentTable.values[parts.last()] = value
     }
-    
+
     /**
      * Creates or gets a nested table by key path
      */
     fun getOrCreateTable(key: String): TomlTable {
         val parts = key.split('.')
         var currentTable = this
-        
+
         for (part in parts) {
             currentTable = currentTable.tables.getOrPut(part) { TomlTable() }
         }
@@ -137,22 +132,22 @@ data class TomlTable(
  * Represents a TOML document.
  */
 data class TomlDocument(val rootTable: TomlTable = TomlTable()) {
-    
+
     /**
      * Gets a value by key path
      */
     fun getValue(key: String): TomlValue? = rootTable.getValue(key)
-    
+
     /**
      * Gets a table by key path
      */
     fun getTable(key: String): TomlTable? = rootTable.getTable(key)
-    
+
     /**
      * Sets a value by key path
      */
     fun setValue(key: String, value: TomlValue) = rootTable.setValue(key, value)
-    
+
     /**
      * Creates or gets a nested table by key path
      */
