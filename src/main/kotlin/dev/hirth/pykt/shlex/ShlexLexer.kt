@@ -48,8 +48,14 @@ class ShlexLexer(
     }
     
     /**
-     * Get the next token from the input.
-     * Returns null when no more tokens are available.
+     * Get the next token from the input string.
+     * 
+     * This method advances through the input string and returns the next
+     * complete token according to shell parsing rules. It handles quotes,
+     * escapes, and word boundaries appropriately based on the lexer configuration.
+     * 
+     * @return The next token as a string, or null if no more tokens are available
+     * @throws ShlexException if parsing encounters an error (e.g., unterminated quote)
      */
     fun nextToken(): String? {
         token.clear()
@@ -169,7 +175,14 @@ class ShlexLexer(
     }
     
     /**
-     * Get all tokens as a list.
+     * Get all tokens from the input as a list.
+     * 
+     * This convenience method calls nextToken() repeatedly until all tokens
+     * are consumed and returns them as a list. This is equivalent to manually
+     * calling nextToken() in a loop until it returns null.
+     * 
+     * @return List containing all tokens from the input string
+     * @throws ShlexException if parsing encounters an error during tokenization
      */
     fun tokenize(): List<String> {
         val tokens = mutableListOf<String>()
