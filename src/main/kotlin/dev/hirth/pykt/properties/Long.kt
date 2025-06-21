@@ -12,16 +12,16 @@ import kotlin.reflect.KProperty
  */
 class LongRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Long> {
 
-    private var default: ((String) -> Long)? = null
+    private var default: (() -> Long)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Long) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Long) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Long {
         return when (default) {
             null -> map.getValue(property.name).toLong()
-            else -> map[property.name]?.toLong() ?: default!!(property.name)
+            else -> map[property.name]?.toLong() ?: default!!()
         }
     }
 }
@@ -34,9 +34,9 @@ class LongRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Long> {
  */
 class NullableLongRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Long?> {
 
-    private var default: ((String) -> Long)? = null
+    private var default: (() -> Long)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Long) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Long) : this(map) {
         this.default = default
     }
 
@@ -44,7 +44,7 @@ class NullableLongRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Long
         val value = map[property.name]?.toLong()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 }
@@ -57,16 +57,16 @@ class NullableLongRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Long
  */
 class LongRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Long> {
 
-    private var default: ((String) -> Long)? = null
+    private var default: (() -> Long)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Long) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Long) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Long {
         return when (default) {
             null -> map.getValue(property.name).toLong()
-            else -> map[property.name]?.toLong() ?: default!!(property.name)
+            else -> map[property.name]?.toLong() ?: default!!()
         }
     }
 
@@ -83,9 +83,9 @@ class LongRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Long
  */
 class NullableLongRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Long?> {
 
-    private var default: ((String) -> Long)? = null
+    private var default: (() -> Long)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Long) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Long) : this(map) {
         this.default = default
     }
 
@@ -93,7 +93,7 @@ class NullableLongRW(val map: MutableMap<String, String>) : ReadWriteProperty<An
         val value = map[property.name]?.toLong()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 

@@ -12,16 +12,16 @@ import kotlin.reflect.KProperty
  */
 class BooleanRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Boolean> {
 
-    private var default: ((String) -> Boolean)? = null
+    private var default: (() -> Boolean)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Boolean) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Boolean) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
         return when (default) {
             null -> map.getValue(property.name).toBoolean()
-            else -> map[property.name]?.toBoolean() ?: default!!(property.name)
+            else -> map[property.name]?.toBoolean() ?: default!!()
         }
     }
 }
@@ -34,9 +34,9 @@ class BooleanRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Boolean> 
  */
 class NullableBooleanRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Boolean?> {
 
-    private var default: ((String) -> Boolean)? = null
+    private var default: (() -> Boolean)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Boolean) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Boolean) : this(map) {
         this.default = default
     }
 
@@ -44,7 +44,7 @@ class NullableBooleanRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, B
         val value = map[property.name]?.toBoolean()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 }
@@ -57,16 +57,16 @@ class NullableBooleanRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, B
  */
 class BooleanRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Boolean> {
 
-    private var default: ((String) -> Boolean)? = null
+    private var default: (() -> Boolean)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Boolean) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Boolean) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
         return when (default) {
             null -> map.getValue(property.name).toBoolean()
-            else -> map[property.name]?.toBoolean() ?: default!!(property.name)
+            else -> map[property.name]?.toBoolean() ?: default!!()
         }
     }
 
@@ -83,9 +83,9 @@ class BooleanRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, B
  */
 class NullableBooleanRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Boolean?> {
 
-    private var default: ((String) -> Boolean)? = null
+    private var default: (() -> Boolean)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Boolean) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Boolean) : this(map) {
         this.default = default
     }
 
@@ -93,7 +93,7 @@ class NullableBooleanRW(val map: MutableMap<String, String>) : ReadWriteProperty
         val value = map[property.name]?.toBoolean()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 

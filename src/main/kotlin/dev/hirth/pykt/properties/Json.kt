@@ -20,20 +20,20 @@ class JsonRO<T : Any>(
     val json: Json = Json,
 ) : ReadOnlyProperty<Any?, T> {
 
-    private var default: ((String) -> T)? = null
+    private var default: (() -> T)? = null
 
     constructor(
         map: Map<String, String>,
         type: KClass<T>,
         json: Json = Json,
-        default: (String) -> T,
+        default: () -> T,
     ) : this(map, type, json) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         if (default != null && property.name !in map) {
-            return default!!(property.name)
+            return default!!()
         }
 
         val value = map.getValue(property.name)
@@ -55,20 +55,20 @@ class NullableJsonRO<T : Any>(
     val json: Json = Json
 ) : ReadOnlyProperty<Any?, T?> {
 
-    private var default: ((String) -> T)? = null
+    private var default: (() -> T)? = null
 
     constructor(
         map: Map<String, String>,
         type: KClass<T>,
         json: Json = Json,
-        default: (String) -> T,
+        default: () -> T,
     ) : this(map, type, json) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         if (default != null && property.name !in map) {
-            return default!!(property.name)
+            return default!!()
         }
 
         return map[property.name]?.let {
@@ -91,20 +91,20 @@ class JsonRW<T : Any>(
     val json: Json = Json
 ) : ReadWriteProperty<Any?, T> {
 
-    private var default: ((String) -> T)? = null
+    private var default: (() -> T)? = null
 
     constructor(
         map: MutableMap<String, String>,
         type: KClass<T>,
         json: Json = Json,
-        default: (String) -> T,
+        default: () -> T,
     ) : this(map, type, json) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         if (default != null && property.name !in map) {
-            return default!!(property.name)
+            return default!!()
         }
 
         val value = map.getValue(property.name)
@@ -130,20 +130,20 @@ class NullableJsonRW<T : Any>(
     val json: Json = Json
 ) : ReadWriteProperty<Any?, T?> {
 
-    private var default: ((String) -> T)? = null
+    private var default: (() -> T)? = null
 
     constructor(
         map: MutableMap<String, String>,
         type: KClass<T>,
         json: Json = Json,
-        default: (String) -> T,
+        default: () -> T,
     ) : this(map, type, json) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         if (default != null && property.name !in map) {
-            return default!!(property.name)
+            return default!!()
         }
 
         return map[property.name]?.let {

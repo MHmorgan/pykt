@@ -11,7 +11,7 @@ class BooleanTest {
 
         class TestClass {
             val existingKey by BooleanRO(map)
-            val missingKey by BooleanRO(map) { "default-$it".contains("default") }
+            val missingKey by BooleanRO(map) { true }
         }
 
         val testClass = TestClass()
@@ -26,7 +26,7 @@ class BooleanTest {
         class TestClass {
             val existingKey by NullableBooleanRO(map)
             val missingKey by NullableBooleanRO(map)
-            val missingKeyWithDefault by NullableBooleanRO(map) { "default-$it".contains("default") }
+            val missingKeyWithDefault by NullableBooleanRO(map) { true }
         }
 
         val testClass = TestClass()
@@ -41,7 +41,7 @@ class BooleanTest {
 
         class TestClass {
             var existingKey by BooleanRW(map)
-            var missingKey by BooleanRW(map) { "default-$it".contains("default") }
+            var missingKey by BooleanRW(map) { true }
         }
 
         val testClass = TestClass()
@@ -65,7 +65,7 @@ class BooleanTest {
         class TestClass {
             var existingKey by NullableBooleanRW(map)
             var missingKey by NullableBooleanRW(map)
-            var missingKeyWithDefault by NullableBooleanRW(map) { "default-$it".contains("default") }
+            var missingKeyWithDefault by NullableBooleanRW(map) { true }
         }
 
         val testClass = TestClass()

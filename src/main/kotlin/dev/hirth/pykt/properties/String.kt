@@ -12,16 +12,16 @@ import kotlin.reflect.KProperty
  */
 class StringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String> {
 
-    private var default: ((String) -> String)? = null
+    private var default: (() -> String)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> String) : this(map) {
+    constructor(map: Map<String, String>, default: () -> String) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String {
         return when (default) {
             null -> map.getValue(property.name)
-            else -> map[property.name] ?: default!!(property.name)
+            else -> map[property.name] ?: default!!()
         }
     }
 }
@@ -34,9 +34,9 @@ class StringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String> {
  */
 class NullableStringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String?> {
 
-    private var default: ((String) -> String)? = null
+    private var default: (() -> String)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> String) : this(map) {
+    constructor(map: Map<String, String>, default: () -> String) : this(map) {
         this.default = default
     }
 
@@ -44,7 +44,7 @@ class NullableStringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, St
         val value = map[property.name]
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 }
@@ -57,16 +57,16 @@ class NullableStringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, St
  */
 class StringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, String> {
 
-    private var default: ((String) -> String)? = null
+    private var default: (() -> String)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> String) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> String) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): String {
         return when (default) {
             null -> map.getValue(property.name)
-            else -> map[property.name] ?: default!!(property.name)
+            else -> map[property.name] ?: default!!()
         }
     }
 
@@ -83,9 +83,9 @@ class StringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, St
  */
 class NullableStringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, String?> {
 
-    private var default: ((String) -> String)? = null
+    private var default: (() -> String)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> String) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> String) : this(map) {
         this.default = default
     }
 
@@ -93,7 +93,7 @@ class NullableStringRW(val map: MutableMap<String, String>) : ReadWriteProperty<
         val value = map[property.name]
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 

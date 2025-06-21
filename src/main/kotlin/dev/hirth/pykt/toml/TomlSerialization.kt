@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package dev.hirth.pykt.toml
 
 import kotlinx.serialization.*

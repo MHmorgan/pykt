@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package dev.hirth.pykt.ini
 
 import kotlin.properties.ReadOnlyProperty
@@ -25,7 +27,7 @@ class IniPropertyWithDefault<T>(
     private val iniFile: IniFile,
     private val section: String = "DEFAULT",
     private val defaultValue: T,
-    private val converter: (String) -> T = { @Suppress("UNCHECKED_CAST") it as T }
+    private val converter: (String) -> T = { it as T }
 ) : ReadOnlyProperty<Any?, T> {
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
@@ -66,7 +68,7 @@ class IniPropertyRWWithDefault<T>(
     private val iniFile: IniFile,
     private val section: String = "DEFAULT",
     private val defaultValue: T,
-    private val converter: (String) -> T = { @Suppress("UNCHECKED_CAST") it as T },
+    private val converter: (String) -> T = { it as T },
     private val serializer: (T) -> String = { it.toString() }
 ) : ReadWriteProperty<Any?, T> {
 

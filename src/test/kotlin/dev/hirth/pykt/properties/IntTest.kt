@@ -11,12 +11,12 @@ class IntTest {
 
         class TestClass {
             val existingKey by IntRO(map)
-            val missingKey by IntRO(map) { it.length }
+            val missingKey by IntRO(map) { 10 }
         }
 
         val testClass = TestClass()
         assertEquals(42, testClass.existingKey)
-        assertEquals(10, testClass.missingKey) // "missingKey".length = 10
+        assertEquals(10, testClass.missingKey)
     }
 
     @Test
@@ -32,7 +32,7 @@ class IntTest {
         val testClass = TestClass()
         assertEquals(42, testClass.existingKey)
         assertNull(testClass.missingKey)
-        assertEquals(19, testClass.missingKeyWithDefault) // "missingKeyWithDefault".length = 19
+        assertEquals(19, testClass.missingKeyWithDefault)
     }
 
     @Test
@@ -41,7 +41,7 @@ class IntTest {
 
         class TestClass {
             var existingKey by IntRW(map)
-            var missingKey by IntRW(map) { it.length }
+            var missingKey by IntRW(map) { 10 }
         }
 
         val testClass = TestClass()

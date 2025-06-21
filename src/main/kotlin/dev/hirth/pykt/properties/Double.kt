@@ -10,20 +10,12 @@ import kotlin.reflect.KProperty
  * @param map The map to read the value from.
  * @param default The default value to return if the key is not present in the map.
  */
-class DoubleRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Double> {
+class DoubleRO(map: Map<String, String>) : MapPropertyRO<Double>(map, String::toDouble) {
+    constructor(map: Map<String, String>, default: () -> Double) :
+            this(map) { this.default = default }
 
-    private var default: ((String) -> Double)? = null
-
-    constructor(map: Map<String, String>, default: (String) -> Double) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Double {
-        return when (default) {
-            null -> map.getValue(property.name).toDouble()
-            else -> map[property.name]?.toDouble() ?: default!!(property.name)
-        }
-    }
+    constructor(map: Map<String, String>, default: Double) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -34,9 +26,9 @@ class DoubleRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Double> {
  */
 class NullableDoubleRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Double?> {
 
-    private var default: ((String) -> Double)? = null
+    private var default: (() -> Double)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Double) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Double) : this(map) {
         this.default = default
     }
 
@@ -44,7 +36,7 @@ class NullableDoubleRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Do
         val value = map[property.name]?.toDouble()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 }
@@ -57,16 +49,16 @@ class NullableDoubleRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Do
  */
 class DoubleRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Double> {
 
-    private var default: ((String) -> Double)? = null
+    private var default: (() -> Double)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Double) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Double) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Double {
         return when (default) {
             null -> map.getValue(property.name).toDouble()
-            else -> map[property.name]?.toDouble() ?: default!!(property.name)
+            else -> map[property.name]?.toDouble() ?: default!!()
         }
     }
 
@@ -83,9 +75,9 @@ class DoubleRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Do
  */
 class NullableDoubleRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Double?> {
 
-    private var default: ((String) -> Double)? = null
+    private var default: (() -> Double)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Double) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Double) : this(map) {
         this.default = default
     }
 
@@ -93,7 +85,7 @@ class NullableDoubleRW(val map: MutableMap<String, String>) : ReadWriteProperty<
         val value = map[property.name]?.toDouble()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 

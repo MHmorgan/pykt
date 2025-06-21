@@ -11,12 +11,12 @@ class FloatTest {
 
         class TestClass {
             val existingKey by FloatRO(map)
-            val missingKey by FloatRO(map) { it.length.toFloat() }
+            val missingKey by FloatRO(map) { 10.0f }
         }
 
         val testClass = TestClass()
         assertEquals(42.5f, testClass.existingKey)
-        assertEquals(10.0f, testClass.missingKey) // "missingKey".length = 10
+        assertEquals(10.0f, testClass.missingKey)
     }
 
     @Test
@@ -32,7 +32,7 @@ class FloatTest {
         val testClass = TestClass()
         assertEquals(42.5f, testClass.existingKey)
         assertNull(testClass.missingKey)
-        assertEquals(19.0f, testClass.missingKeyWithDefault) // "missingKeyWithDefault".length = 19
+        assertEquals(19.0f, testClass.missingKeyWithDefault)
     }
 
     @Test
@@ -41,7 +41,7 @@ class FloatTest {
 
         class TestClass {
             var existingKey by FloatRW(map)
-            var missingKey by FloatRW(map) { it.length.toFloat() }
+            var missingKey by FloatRW(map) { 10.0f }
         }
 
         val testClass = TestClass()

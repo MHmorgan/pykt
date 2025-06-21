@@ -12,16 +12,16 @@ import kotlin.reflect.KProperty
  */
 class IntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int> {
 
-    private var default: ((String) -> Int)? = null
+    private var default: (() -> Int)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Int) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Int) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
         return when (default) {
             null -> map.getValue(property.name).toInt()
-            else -> map[property.name]?.toInt() ?: default!!(property.name)
+            else -> map[property.name]?.toInt() ?: default!!()
         }
     }
 }
@@ -34,9 +34,9 @@ class IntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int> {
  */
 class NullableIntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int?> {
 
-    private var default: ((String) -> Int)? = null
+    private var default: (() -> Int)? = null
 
-    constructor(map: Map<String, String>, default: (String) -> Int) : this(map) {
+    constructor(map: Map<String, String>, default: () -> Int) : this(map) {
         this.default = default
     }
 
@@ -44,7 +44,7 @@ class NullableIntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int?>
         val value = map[property.name]?.toInt()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 }
@@ -57,16 +57,16 @@ class NullableIntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int?>
  */
 class IntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int> {
 
-    private var default: ((String) -> Int)? = null
+    private var default: (() -> Int)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Int) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Int) : this(map) {
         this.default = default
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
         return when (default) {
             null -> map.getValue(property.name).toInt()
-            else -> map[property.name]?.toInt() ?: default!!(property.name)
+            else -> map[property.name]?.toInt() ?: default!!()
         }
     }
 
@@ -83,9 +83,9 @@ class IntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int> 
  */
 class NullableIntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int?> {
 
-    private var default: ((String) -> Int)? = null
+    private var default: (() -> Int)? = null
 
-    constructor(map: MutableMap<String, String>, default: (String) -> Int) : this(map) {
+    constructor(map: MutableMap<String, String>, default: () -> Int) : this(map) {
         this.default = default
     }
 
@@ -93,7 +93,7 @@ class NullableIntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any
         val value = map[property.name]?.toInt()
         return when (default) {
             null -> value
-            else -> value ?: default!!(property.name)
+            else -> value ?: default!!()
         }
     }
 

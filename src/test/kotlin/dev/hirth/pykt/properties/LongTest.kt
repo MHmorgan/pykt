@@ -11,12 +11,12 @@ class LongTest {
 
         class TestClass {
             val existingKey by LongRO(map)
-            val missingKey by LongRO(map) { it.length.toLong() }
+            val missingKey by LongRO(map) { 10 }
         }
 
         val testClass = TestClass()
         assertEquals(9223372036854775807L, testClass.existingKey)
-        assertEquals(10L, testClass.missingKey) // "missingKey".length = 10
+        assertEquals(10L, testClass.missingKey)
     }
 
     @Test
@@ -32,7 +32,7 @@ class LongTest {
         val testClass = TestClass()
         assertEquals(9223372036854775807L, testClass.existingKey)
         assertNull(testClass.missingKey)
-        assertEquals(19L, testClass.missingKeyWithDefault) // "missingKeyWithDefault".length = 19
+        assertEquals(19L, testClass.missingKeyWithDefault)
     }
 
     @Test
@@ -41,7 +41,7 @@ class LongTest {
 
         class TestClass {
             var existingKey by LongRW(map)
-            var missingKey by LongRW(map) { it.length.toLong() }
+            var missingKey by LongRW(map) { 10L }
         }
 
         val testClass = TestClass()

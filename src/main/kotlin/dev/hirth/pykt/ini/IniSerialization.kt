@@ -53,7 +53,7 @@ private class IniDecoder(
         throw SerializationException("Primitive decoding not supported at root level")
 
     override fun decodeFloat(): Float = throw SerializationException("Primitive decoding not supported at root level")
-    override fun decodeInline(inlineDescriptor: SerialDescriptor): Decoder = this
+    override fun decodeInline(descriptor: SerialDescriptor): Decoder = this
     override fun decodeInt(): Int = throw SerializationException("Primitive decoding not supported at root level")
     override fun decodeLong(): Long = throw SerializationException("Primitive decoding not supported at root level")
     override fun decodeNotNullMark(): Boolean = true

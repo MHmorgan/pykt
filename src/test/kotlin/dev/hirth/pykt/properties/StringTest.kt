@@ -11,7 +11,7 @@ class StringTest {
 
         class TestClass {
             val existingKey by StringRO(map)
-            val missingKey by StringRO(map) { "prefix-$it" }
+            val missingKey by StringRO(map) { "prefix-missingKey" }
         }
 
         val testClass = TestClass()
@@ -26,7 +26,7 @@ class StringTest {
         class TestClass {
             val existingKey by NullableStringRO(map)
             val missingKey by NullableStringRO(map)
-            val missingKeyWithDefault by NullableStringRO(map) { "prefix-$it" }
+            val missingKeyWithDefault by NullableStringRO(map) { "prefix-missingKeyWithDefault" }
         }
 
         val testClass = TestClass()
@@ -41,7 +41,7 @@ class StringTest {
 
         class TestClass {
             var existingKey by StringRW(map)
-            var missingKey by StringRW(map) { "prefix-$it" }
+            var missingKey by StringRW(map) { "prefix-missingKey" }
         }
 
         val testClass = TestClass()
@@ -65,7 +65,7 @@ class StringTest {
         class TestClass {
             var existingKey by NullableStringRW(map)
             var missingKey by NullableStringRW(map)
-            var missingKeyWithDefault by NullableStringRW(map) { "prefix-$it" }
+            var missingKeyWithDefault by NullableStringRW(map) { "prefix-missingKeyWithDefault" }
         }
 
         val testClass = TestClass()

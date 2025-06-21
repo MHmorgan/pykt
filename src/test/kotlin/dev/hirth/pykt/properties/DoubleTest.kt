@@ -11,12 +11,12 @@ class DoubleTest {
 
         class TestClass {
             val existingKey by DoubleRO(map)
-            val missingKey by DoubleRO(map) { it.length.toDouble() }
+            val missingKey by DoubleRO(map) { 10.0 }
         }
 
         val testClass = TestClass()
         assertEquals(42.5, testClass.existingKey)
-        assertEquals(10.0, testClass.missingKey) // "missingKey".length = 10
+        assertEquals(10.0, testClass.missingKey)
     }
 
     @Test
@@ -32,7 +32,7 @@ class DoubleTest {
         val testClass = TestClass()
         assertEquals(42.5, testClass.existingKey)
         assertNull(testClass.missingKey)
-        assertEquals(19.0, testClass.missingKeyWithDefault) // "missingKeyWithDefault".length = 19
+        assertEquals(19.0, testClass.missingKeyWithDefault)
     }
 
     @Test
@@ -41,7 +41,7 @@ class DoubleTest {
 
         class TestClass {
             var existingKey by DoubleRW(map)
-            var missingKey by DoubleRW(map) { it.length.toDouble() }
+            var missingKey by DoubleRW(map) { 10.0 }
         }
 
         val testClass = TestClass()
