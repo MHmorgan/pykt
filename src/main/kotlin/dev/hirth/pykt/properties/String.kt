@@ -10,20 +10,12 @@ import kotlin.reflect.KProperty
  * @param map The map to read the value from.
  * @param default The default value to return if the key is not present in the map.
  */
-class StringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String> {
+class StringRO(map: Map<String, String>) : MapPropertyRO<String>(map, { it }) {
+    constructor(map: Map<String, String>, default: () -> String) :
+            this(map) { this.default = default }
 
-    private var default: (() -> String)? = null
-
-    constructor(map: Map<String, String>, default: () -> String) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String {
-        return when (default) {
-            null -> map.getValue(property.name)
-            else -> map[property.name] ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: String) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -32,21 +24,12 @@ class StringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String> {
  * @param map The map to read the value from.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableStringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, String?> {
+class NullableStringRO(map: Map<String, String>) : NullableMapPropertyRO<String>(map, { it }) {
+    constructor(map: Map<String, String>, default: () -> String) :
+            this(map) { this.default = default }
 
-    private var default: (() -> String)? = null
-
-    constructor(map: Map<String, String>, default: () -> String) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String? {
-        val value = map[property.name]
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: String) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -55,24 +38,12 @@ class NullableStringRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, St
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class StringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, String> {
+class StringRW(map: MutableMap<String, String>) : MapPropertyRW<String>(map, { it }) {
+    constructor(map: MutableMap<String, String>, default: () -> String) :
+            this(map) { this.default = default }
 
-    private var default: (() -> String)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> String) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String {
-        return when (default) {
-            null -> map.getValue(property.name)
-            else -> map[property.name] ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
-        map[property.name] = value
-    }
+    constructor(map: MutableMap<String, String>, default: String) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -81,25 +52,10 @@ class StringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, St
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableStringRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, String?> {
+class NullableStringRW(map: MutableMap<String, String>) : NullableMapPropertyRW<String>(map, { it }) {
+    constructor(map: MutableMap<String, String>, default: () -> String) :
+            this(map) { this.default = default }
 
-    private var default: (() -> String)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> String) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String? {
-        val value = map[property.name]
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: String?) {
-        if (value != null) {
-            map[property.name] = value
-        }
-    }
+    constructor(map: MutableMap<String, String>, default: String) :
+            this(map) { this.default = { default } }
 }

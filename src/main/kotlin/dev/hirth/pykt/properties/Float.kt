@@ -10,20 +10,12 @@ import kotlin.reflect.KProperty
  * @param map The map to read the value from.
  * @param default The default value to return if the key is not present in the map.
  */
-class FloatRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Float> {
+class FloatRO(map: Map<String, String>) : MapPropertyRO<Float>(map, String::toFloat) {
+    constructor(map: Map<String, String>, default: () -> Float) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Float)? = null
-
-    constructor(map: Map<String, String>, default: () -> Float) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Float {
-        return when (default) {
-            null -> map.getValue(property.name).toFloat()
-            else -> map[property.name]?.toFloat() ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: Float) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -32,21 +24,12 @@ class FloatRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Float> {
  * @param map The map to read the value from.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableFloatRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Float?> {
+class NullableFloatRO(map: Map<String, String>) : NullableMapPropertyRO<Float>(map, String::toFloat) {
+    constructor(map: Map<String, String>, default: () -> Float) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Float)? = null
-
-    constructor(map: Map<String, String>, default: () -> Float) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Float? {
-        val value = map[property.name]?.toFloat()
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: Float) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -55,24 +38,12 @@ class NullableFloatRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Flo
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class FloatRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Float> {
+class FloatRW(map: MutableMap<String, String>) : MapPropertyRW<Float>(map, String::toFloat) {
+    constructor(map: MutableMap<String, String>, default: () -> Float) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Float)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> Float) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Float {
-        return when (default) {
-            null -> map.getValue(property.name).toFloat()
-            else -> map[property.name]?.toFloat() ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: Float) {
-        map[property.name] = value.toString()
-    }
+    constructor(map: MutableMap<String, String>, default: Float) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -81,25 +52,10 @@ class FloatRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Flo
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableFloatRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Float?> {
+class NullableFloatRW(map: MutableMap<String, String>) : NullableMapPropertyRW<Float>(map, String::toFloat) {
+    constructor(map: MutableMap<String, String>, default: () -> Float) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Float)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> Float) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Float? {
-        val value = map[property.name]?.toFloat()
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: Float?) {
-        if (value != null) {
-            map[property.name] = value.toString()
-        }
-    }
+    constructor(map: MutableMap<String, String>, default: Float) :
+            this(map) { this.default = { default } }
 }

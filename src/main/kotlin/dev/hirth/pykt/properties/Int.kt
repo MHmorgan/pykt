@@ -10,20 +10,12 @@ import kotlin.reflect.KProperty
  * @param map The map to read the value from.
  * @param default The default value to return if the key is not present in the map.
  */
-class IntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int> {
+class IntRO(map: Map<String, String>) : MapPropertyRO<Int>(map, String::toInt) {
+    constructor(map: Map<String, String>, default: () -> Int) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Int)? = null
-
-    constructor(map: Map<String, String>, default: () -> Int) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-        return when (default) {
-            null -> map.getValue(property.name).toInt()
-            else -> map[property.name]?.toInt() ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: Int) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -32,21 +24,12 @@ class IntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int> {
  * @param map The map to read the value from.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableIntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int?> {
+class NullableIntRO(map: Map<String, String>) : NullableMapPropertyRO<Int>(map, String::toInt) {
+    constructor(map: Map<String, String>, default: () -> Int) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Int)? = null
-
-    constructor(map: Map<String, String>, default: () -> Int) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Int? {
-        val value = map[property.name]?.toInt()
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
+    constructor(map: Map<String, String>, default: Int) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -55,24 +38,12 @@ class NullableIntRO(val map: Map<String, String>) : ReadOnlyProperty<Any?, Int?>
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class IntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int> {
+class IntRW(map: MutableMap<String, String>) : MapPropertyRW<Int>(map, String::toInt) {
+    constructor(map: MutableMap<String, String>, default: () -> Int) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Int)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> Int) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-        return when (default) {
-            null -> map.getValue(property.name).toInt()
-            else -> map[property.name]?.toInt() ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
-        map[property.name] = value.toString()
-    }
+    constructor(map: MutableMap<String, String>, default: Int) :
+            this(map) { this.default = { default } }
 }
 
 /**
@@ -81,25 +52,10 @@ class IntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int> 
  * @param map The map to write the value to.
  * @param default The default value to use if the key is not present in the map.
  */
-class NullableIntRW(val map: MutableMap<String, String>) : ReadWriteProperty<Any?, Int?> {
+class NullableIntRW(map: MutableMap<String, String>) : NullableMapPropertyRW<Int>(map, String::toInt) {
+    constructor(map: MutableMap<String, String>, default: () -> Int) :
+            this(map) { this.default = default }
 
-    private var default: (() -> Int)? = null
-
-    constructor(map: MutableMap<String, String>, default: () -> Int) : this(map) {
-        this.default = default
-    }
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Int? {
-        val value = map[property.name]?.toInt()
-        return when (default) {
-            null -> value
-            else -> value ?: default!!()
-        }
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int?) {
-        if (value != null) {
-            map[property.name] = value.toString()
-        }
-    }
+    constructor(map: MutableMap<String, String>, default: Int) :
+            this(map) { this.default = { default } }
 }
