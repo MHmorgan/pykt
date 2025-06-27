@@ -1,5 +1,6 @@
 package dev.hirth.pykt.time
 
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -60,10 +61,35 @@ fun LocalDateTime.toRfc1123(): String {
 fun LocalDateTime.toOffsetDateTime(): OffsetDateTime = atOffset(localOffset)!!
 
 /**
+ * Convert a [LocalDateTime] to an [Instant], using the current time
+ * zone to correct for the offset.
+ */
+fun LocalDateTime.toInstant(): Instant {
+    return atOffset(localOffset).toInstant()
+}
+
+/**
  * Convert a [OffsetDateTime] to a [LocalDateTime], using the current time
  * zone to correct for the offset.
  */
 fun OffsetDateTime.toCorrectedLocalDateTime(): LocalDateTime {
-    return withOffsetSameInstant(localOffset)
-        .toLocalDateTime()
+    return withOffsetSameInstant(localOffset).toLocalDateTime()
+}
+
+/**
+ * Converts this [Instant] to a [LocalDateTime] using the system's default time zone offset.
+ *
+ * @return the [LocalDateTime] representation of this [Instant]
+ */
+fun Instant.toLocalDateTime(): LocalDateTime {
+    return atOffset(localOffset).toLocalDateTime()
+}
+
+/**
+ * Converts an [Instant] to an [OffsetDateTime] using the system's local time-zone offset.
+ *
+ * @return the [OffsetDateTime] representation of this [Instant] with the local offset applied.
+ */
+fun Instant.toOffsetDateTime(): OffsetDateTime {
+    return atOffset(localOffset)
 }
