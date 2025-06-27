@@ -1,23 +1,33 @@
-Pykt
+Pykt 🚀
 ====
 
 `pykt` contains functionality missing from Kotlin's standard library.
 
 Only created for the JVM target.
 
-## Components
+## 📋 Overview
 
-### [S-expressions](src/main/kotlin/dev/hirth/pykt/sexp)
+This library provides essential utilities and functionality for JVM Kotlin development:
+
+- **📊 Data Formats**: S-expressions, INI, CSV, TOML, and Properties support
+- **🔧 Shell Processing**: Command-line lexing and argument parsing (shlex)
+- **🧮 Data Processing**: Itertools, statistics, and functional utilities
+- **⏰ Time Handling**: Time parsing utilities and temporal serialization
+- **💾 Performance**: Memoization and caching utilities
+
+## 🔧 Components
+
+### 🌳 [S-expressions](src/main/kotlin/dev/hirth/pykt/sexp)
 
 Complete S-expression parsing and manipulation library with support for configuration files.
 
 Inspired by OCaml's `Sexp` from `core`.
 
 Key features:
-- Kotlin-idiomatic API with extension functions (`String.parseSexp()`, `File.parseSexp()`)
-- Callback-based parsing support
-- Configuration file support with typed getters (`SexpConfig`)
-- Comprehensive error handling and validation
+- 🔗 Kotlin-idiomatic API with extension functions (`String.parseSexp()`, `File.parseSexp()`)
+- 📞 Callback-based parsing support
+- ⚙️ Configuration file support with typed getters (`SexpConfig`)
+- 🛡️ Comprehensive error handling and validation
 
 Example usage:
 ```kotlin
@@ -39,19 +49,19 @@ val debug = config.getBooleanValue("server.debug")   // true
 val features = config.getStringListValue("server.features") // ["auth", "logging"]
 ```
 
-### [INI Support](src/main/kotlin/dev/hirth/pykt/ini)
+### ⚙️ [INI Support](src/main/kotlin/dev/hirth/pykt/ini)
 
 Read and write INI/configuration files with comprehensive parsing support.
 
 Inspired by Python's `configparser` module.
 
 Key features:
-- Parse INI files from strings, readers, or files
-- Support for different INI dialects (standard, permissive, properties-style)
-- Type-safe configuration access with property delegates
-- Case-sensitive and case-insensitive parsing
-- Support for multiline values and interpolation
-- Comprehensive error handling
+- 📖 Parse INI files from strings, readers, or files
+- 🔄 Support for different INI dialects (standard, permissive, properties-style)
+- 🔒 Type-safe configuration access with property delegates
+- 🔤 Case-sensitive and case-insensitive parsing
+- 📝 Support for multiline values and interpolation
+- 🛡️ Comprehensive error handling
 
 Example usage:
 ```kotlin
@@ -85,19 +95,19 @@ val config = AppConfig(iniFile)
 println("App: ${config.appName}, Debug: ${config.debug}")
 ```
 
-### [CSV Support](src/main/kotlin/dev/hirth/pykt/csv)
+### 📊 [CSV Support](src/main/kotlin/dev/hirth/pykt/csv)
 
 Read and write CSV files with [`CsvReader`](src/main/kotlin/dev/hirth/pykt/csv/CsvReader.kt) and [`CsvWriter`](src/main/kotlin/dev/hirth/pykt/csv/CsvWriter.kt).
 
 Inspired by python's `csv` module.
 
 Key features:
-- Parse CSV from strings, readers, or files
-- Write CSV using fluent API
-- Support for different CSV dialects (Excel, Unix, custom)
-- Configurable delimiters, quoting, and escaping
-- Dictionary-based reading and writing
-- Proper handling of quoted fields and line breaks
+- 📖 Parse CSV from strings, readers, or files
+- ✍️ Write CSV using fluent API
+- 🔄 Support for different CSV dialects (Excel, Unix, custom)
+- ⚙️ Configurable delimiters, quoting, and escaping
+- 📚 Dictionary-based reading and writing
+- 🛡️ Proper handling of quoted fields and line breaks
 
 Example usage:
 ```kotlin
@@ -139,18 +149,18 @@ val tsvData = "name\tage\tcity\nJohn\t25\tNYC"
 val tsvRows = tsvData.parseCsv(CsvDialect(delimiter = '\t')).toList()
 ```
 
-### [TOML Support](src/main/kotlin/dev/hirth/pykt/toml)
+### 🔧 [TOML Support](src/main/kotlin/dev/hirth/pykt/toml)
 
 Read and write TOML files with full support for [TOML v1.0.0](https://toml.io/en/v1.0.0) specification.
 
 Features:
-- Parse TOML documents from strings, readers, or files
-- Write TOML documents using a Kotlin DSL
-- Support for all TOML data types (strings, integers, floats, booleans, dates, arrays, tables)
-- Inline tables and array of tables
-- Comments and multi-line strings
-- Proper escaping and Unicode support
-- Idiomatic Kotlin API with extension functions
+- 📖 Parse TOML documents from strings, readers, or files
+- ✍️ Write TOML documents using a Kotlin DSL
+- 🔢 Support for all TOML data types (strings, integers, floats, booleans, dates, arrays, tables)
+- 📋 Inline tables and array of tables
+- 💬 Comments and multi-line strings
+- 🔤 Proper escaping and Unicode support
+- 🔗 Idiomatic Kotlin API with extension functions
 
 Example usage:
 ```kotlin
@@ -175,15 +185,15 @@ val toml = buildTomlString {
 }
 ```
 
-### [Properties](src/main/kotlin/dev/hirth/pykt/properties)
+### 🏷️ [Properties](src/main/kotlin/dev/hirth/pykt/properties)
 
 Property delegation helpers for reading values from maps with type conversion.
 
 Key features:
-- Type-safe property delegates for common types (String, Int, Long, Double, Float, Boolean)
-- Support for nullable and non-nullable properties
-- Default value handling
-- JSON property delegates for complex types
+- 🔒 Type-safe property delegates for common types (String, Int, Long, Double, Float, Boolean)
+- ❓ Support for nullable and non-nullable properties
+- 🔧 Default value handling
+- 📄 JSON property delegates for complex types
 
 Example usage:
 ```kotlin
@@ -219,15 +229,15 @@ class UserConfig {
 }
 ```
 
-### [Itertools](src/main/kotlin/dev/hirth/pykt/itertools)
+### 🔄 [Itertools](src/main/kotlin/dev/hirth/pykt/itertools)
 
 Sequence utility functions, inspired by python's `itertools` module.
 
 Key features:
-- Infinite sequence generators (`count`, `cycle`, `repeat`)
-- Sequence manipulation (`islice`, `takeWhile`, `dropWhile`)
-- Iterator duplication (`tee`)
-- Lazy evaluation with Kotlin sequences
+- ♾️ Infinite sequence generators (`count`, `cycle`, `repeat`)
+- ✂️ Sequence manipulation (`islice`, `takeWhile`, `dropWhile`)
+- 👯 Iterator duplication (`tee`)
+- 😴 Lazy evaluation with Kotlin sequences
 
 Example usage:
 ```kotlin
@@ -261,15 +271,15 @@ val items = (1..20).toList()
 items.paginate(5).forEach { println(it) }
 ```
 
-### [Statistics](src/main/kotlin/dev/hirth/pykt/statistics)
+### 📈 [Statistics](src/main/kotlin/dev/hirth/pykt/statistics)
 
 Simple statistics functionality, inspired by python's `statistics` module.
 
 Key features:
-- Basic statistical measures (mean, median, mode, variance, standard deviation)
-- Support for different numeric types
-- Key function support for complex data types
-- Robust error handling for edge cases
+- 📊 Basic statistical measures (mean, median, mode, variance, standard deviation)
+- 🔢 Support for different numeric types
+- 🔑 Key function support for complex data types
+- 🛡️ Robust error handling for edge cases
 
 Example usage:
 ```kotlin
@@ -306,18 +316,18 @@ val robustMedian = median(dataWithOutliers)  // 3.5 (not affected by outlier)
 val affectedMean = mean(dataWithOutliers)    // 19.17 (affected by outlier)
 ```
 
-### [Memoization](src/main/kotlin/dev/hirth/pykt/Cache.kt)
+### 💾 [Memoization](src/main/kotlin/dev/hirth/pykt/Cache.kt)
 
 Simple function cache (`Cache`) and thread-safe LRU caches (`LruCacheSync`/`LruCacheAsync`).
 
 Inspired by the similar function caches of python's `functools` module.
 
 Key features:
-- Simple unbounded cache wrapper for functions
-- Thread-safe LRU caches with configurable size limits
-- Async cache for coroutines
-- Cache statistics and pre-warming
-- Manual cache eviction and clearing
+- 🗄️ Simple unbounded cache wrapper for functions
+- 🔒 Thread-safe LRU caches with configurable size limits
+- ⚡ Async cache for coroutines
+- 📊 Cache statistics and pre-warming
+- 🗑️ Manual cache eviction and clearing
 
 Example usage:
 ```kotlin
@@ -360,5 +370,95 @@ runBlocking {
 cachedFib.evict(10)      // Remove specific entry
 cachedFib.clear()        // Clear all entries
 lruCache.evictAll()      // Clear LRU cache
+```
+
+### 🐚 [Shell Lexing (Shlex)](src/main/kotlin/dev/hirth/pykt/shlex)
+
+Shell-like command line parsing and lexical analysis.
+
+Inspired by Python's `shlex` module.
+
+Key features:
+- 🔤 Split shell command lines into tokens
+- 📝 Support for POSIX and non-POSIX parsing modes
+- 🔤 Handle quotes, escapes, and whitespace appropriately
+- 💬 Optional comment parsing
+- ⚙️ Configurable word characters, quotes, and escape sequences
+- 🛡️ Shell-safe string quoting and escaping
+
+Example usage:
+```kotlin
+// Split shell command line
+val tokens = split("ls -la 'my file.txt'")  // ["ls", "-la", "my file.txt"]
+
+// Quote strings for shell safety
+val quoted = quote("file with spaces.txt")  // "'file with spaces.txt'"
+
+// Custom lexer with configuration
+val lexer = ShlexLexer("command --flag='value with spaces'", posix = true, comments = false)
+val customTokens = lexer.tokenize()
+
+// Handle different quote styles
+val mixedQuotes = split("""echo "Hello 'world'" 'How are "you"?'""")
+```
+
+### ⏰ [Time Utilities](src/main/kotlin/dev/hirth/pykt/time)
+
+Time parsing and formatting utilities for various date-time formats.
+
+Key features:
+- 📅 Parse multiple date-time formats (ISO 8601, RFC 1123)
+- 🔄 Convert between LocalDateTime and OffsetDateTime
+- 🌍 Handle time zone corrections automatically
+- 📤 Export to ISO 8601 and RFC 1123 formats
+- 🛡️ Robust parsing with error handling
+
+Example usage:
+```kotlin
+// Parse various time formats
+val isoTime = "2024-07-16T09:38:41.694763+02:00".parseTime()
+val rfcTime = "Tue, 16 Jul 2024 07:38:41 GMT".parseTime()
+val localTime = "2024-07-16T09:38:41".parseTime()
+
+// Convert to different formats
+val iso8601 = localTime.toIso8601()     // "2024-07-16T09:38:41.694763+02:00"
+val rfc1123 = localTime.toRfc1123()     // "Tue, 16 Jul 2024 07:38:41 GMT"
+
+// Time zone handling
+val offsetTime = localTime.toOffsetDateTime()
+val corrected = offsetTime.toCorrectedLocalDateTime()
+```
+
+### 📦 [Serialization](src/main/kotlin/dev/hirth/pykt/serialization)
+
+Kotlinx.serialization support for temporal types.
+
+Key features:
+- 📅 Serializers for LocalDate, LocalDateTime, and Instant
+- 🔄 ISO 8601 format for serialization/deserialization
+- 🔗 Seamless integration with kotlinx.serialization
+- ⚙️ Ready-to-use serializer objects
+
+Example usage:
+```kotlin
+@Serializable
+data class Event(
+    @Serializable(with = DateSerializer::class)
+    val date: LocalDate,
+    
+    @Serializable(with = DateTimeSerializer::class)
+    val timestamp: LocalDateTime,
+    
+    @Serializable(with = InstantSerializer::class)
+    val created: Instant
+)
+
+// Automatic serialization to ISO format
+val event = Event(
+    date = LocalDate.now(),
+    timestamp = LocalDateTime.now(),
+    created = Instant.now()
+)
+val json = Json.encodeToString(event)
 ```
 
