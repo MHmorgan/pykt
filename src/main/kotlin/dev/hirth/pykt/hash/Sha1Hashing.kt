@@ -1,4 +1,4 @@
-package dev.hirth.app.hash
+package dev.hirth.pykt.hash
 
 import java.math.BigDecimal
 import java.math.BigInteger

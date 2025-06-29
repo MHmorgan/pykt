@@ -2,7 +2,7 @@
 
 package dev.hirth.pykt
 
-import dev.hirth.app.hash.Sha1Hashing
+import dev.hirth.pykt.hash.Sha1Hashing
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.security.SecureRandom
