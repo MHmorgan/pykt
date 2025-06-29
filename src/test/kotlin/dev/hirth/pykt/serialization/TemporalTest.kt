@@ -112,7 +112,7 @@ class TemporalTest {
         // Test serialization
         val json = Json.encodeToString(DateTimeRfc1123Container.serializer(), expect)
         // Should serialize to ISO 8601 format (as per the implementation)
-        assertThat(json).contains("2024-07-16T09:38:41.694763")
+        assertThat(json).contains("Tue, 16 Jul 2024 07:38:41 GMT")
 
         // Test deserialization with ISO 8601 format
         run {
