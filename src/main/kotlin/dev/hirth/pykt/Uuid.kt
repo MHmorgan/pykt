@@ -36,6 +36,44 @@ fun Uuid.variant(): Int {
     return (byte.toInt() ushr 6) and 0x03
 }
 
+/**
+ * Return a short string with the 7 first hex characters of the UUID.
+ *
+ * @see Uuid.startsWith
+ */
+fun Uuid.shortString(): String {
+    return toHexString().take(7)
+}
+
+/**
+ * Return `true` if the hex string of this [Uuid] starts
+ * with the given [shortString].
+ *
+ * @see Uuid.shortString
+ */
+fun Uuid.startsWith(shortString: String): Boolean {
+    return toHexString().startsWith(shortString, ignoreCase = true)
+}
+
+/**
+ * Generates a list of short, unique string representations for each UUID in the iterable.
+ * Each string is derived as the shortest prefix of the hexadecimal representation of the UUID
+ * that is not already present in the output list.
+ *
+ * @return A list of short unique strings corresponding to the UUIDs.
+ */
+fun Iterable<Uuid>.shortStrings(): List<String> {
+    val seen = mutableSetOf<String>()
+    return mapNotNull {
+        val uuid = it.toHexString()
+        for (i in 7..<uuid.length) {
+            val s = uuid.take(i)
+            if (seen.add(s)) return@mapNotNull s
+        }
+        null
+    }
+}
+
 private fun ByteArray.setVersion(version: Int) {
     val mask = version shl 4
     val byte = this[6].toInt()
